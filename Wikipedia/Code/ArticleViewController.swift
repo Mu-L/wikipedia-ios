@@ -1,9 +1,9 @@
-import Components
+import WMFComponents
 import WMF
 import CocoaLumberjackSwift
 
 protocol AltTextDelegate: AnyObject {
-    func didTapPublish(altText: String, articleViewController: ArticleViewController, viewModel: AltTextExperimentViewModel)
+    func didTapPublish(altText: String, articleViewController: ArticleViewController, viewModel: WMFAltTextExperimentViewModel)
 }
 
 @objc(WMFArticleViewController)
@@ -97,12 +97,12 @@ class ArticleViewController: ViewController, HintPresenting {
 
     // MARK: Alt-text experiment Properties
 
-    private var altTextBottomSheetViewModel: AltTextExperimentModalSheetViewModel?
-    private(set) var altTextExperimentViewModel: AltTextExperimentViewModel?
+    private var altTextBottomSheetViewModel: WMFAltTextExperimentModalSheetViewModel?
+    private(set) var altTextExperimentViewModel: WMFAltTextExperimentViewModel?
     private(set) weak var altTextDelegate: AltTextDelegate?
     private var needsAltTextExperimentSheet: Bool = false
 
-    convenience init?(articleURL: URL, dataStore: MWKDataStore, theme: Theme, schemeHandler: SchemeHandler? = nil, altTextExperimentViewModel: AltTextExperimentViewModel, needsAltTextExperimentSheet: Bool, altTextBottomSheetViewModel: AltTextExperimentModalSheetViewModel?, altTextDelegate: AltTextDelegate?) {
+    convenience init?(articleURL: URL, dataStore: MWKDataStore, theme: Theme, schemeHandler: SchemeHandler? = nil, altTextExperimentViewModel: WMFAltTextExperimentViewModel, needsAltTextExperimentSheet: Bool, altTextBottomSheetViewModel: WMFAltTextExperimentModalSheetViewModel?, altTextDelegate: AltTextDelegate?) {
         self.init(articleURL: articleURL, dataStore: dataStore, theme: theme)
         self.altTextExperimentViewModel = altTextExperimentViewModel
         self.altTextBottomSheetViewModel = altTextBottomSheetViewModel
@@ -493,7 +493,7 @@ class ArticleViewController: ViewController, HintPresenting {
         messagingController.hideEditPencils()
         messagingController.scrollToNewImage(filename: altTextExperimentViewModel.filename)
         
-        let bottomSheetViewController = AltTextExperimentModalSheetViewController(viewModel: altTextBottomSheetViewModel, delegate: self)
+        let bottomSheetViewController = WMFAltTextExperimentModalSheetViewController(viewModel: altTextBottomSheetViewModel, delegate: self, loggingDelegate: self)
 
         if #available(iOS 16.0, *) {
             if let sheet = bottomSheetViewController.sheetPresentationController {
@@ -1389,8 +1389,39 @@ extension ArticleViewController: UISheetPresentationControllerDelegate {
             case .medium, .large:
                 webView.scrollView.contentInset = UIEdgeInsets(top: oldContentInset.top, left: oldContentInset.left, bottom: view.bounds.height * 0.65, right: oldContentInset.right)
             default:
+                logMinimized()
                 webView.scrollView.contentInset = UIEdgeInsets(top: oldContentInset.top, left: oldContentInset.left, bottom: 75, right: oldContentInset.right)
             }
         }
+    }
+    
+    private func logMinimized() {
+        guard let siteURL = articleURL.wmf_site,
+              let project = WikimediaProject(siteURL: siteURL) else {
+            return
+        }
+        
+        EditInteractionFunnel.shared.logAltTextInputDidMinimize(project: project)
+    }
+}
+
+extension ArticleViewController: WMFAltTextExperimentModalSheetLoggingDelegate {
+    func didAppear() {
+        
+        guard let siteURL = articleURL.wmf_site,
+              let project = WikimediaProject(siteURL: siteURL) else {
+            return
+        }
+        
+        EditInteractionFunnel.shared.logAltTextInputDidAppear(project: project)
+    }
+    
+    func didFocusTextView() {
+        guard let siteURL = articleURL.wmf_site,
+              let project = WikimediaProject(siteURL: siteURL) else {
+            return
+        }
+        
+        EditInteractionFunnel.shared.logAltTextInputDidFocus(project: project)
     }
 }
