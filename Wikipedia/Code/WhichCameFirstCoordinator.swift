@@ -454,13 +454,13 @@ final class WhichCameFirstCoordinator: NSObject, Coordinator {
             let archiveData = (try? await self.gamesDataController.fetchWhichCameFirstArchiveData(project: project))
                 ?? WMFGamesDataController.WMFWhichCameFirstArchiveData(playedDates: [:], pausedDates: [])
 
+            let pausedDates = archiveData.pausedDates
             let viewModel = WMFWhichCameFirstArchiveViewModel(
                 playedDates: archiveData.playedDates,
-                pausedDates: archiveData.pausedDates,
+                pausedDates: pausedDates,
                 onSelectDate: { [weak self] date in
-                    // Only fires for non-completed (new or in-progress) games; completed
-                    // days show a score toast instead and never reach this callback.
-                    self?.logClick(actionSource: "game_start", actionSubtype: "game_archive_calendar", elementId: "game_play_start", actionContext: ["archive": "true"])
+                    let elementId = pausedDates.contains(date) ? "game_play_continue" : "game_play_start"
+                    self?.logClick(actionSource: "game_start", actionSubtype: "game_archive_calendar", elementId: elementId, actionContext: ["archive": "true"])
                     self?.showGameForArchiveDate(date)
                 }
             )
