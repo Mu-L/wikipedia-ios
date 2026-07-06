@@ -2,8 +2,10 @@ import Foundation
 
 public actor WMFImageDataController {
     public static let shared = WMFImageDataController()
-    private let basicService: WMFService?
-    private let mediaWikiService: WMFService?
+    // `var` (not `let`) so the @_spi(Testing) reset() below can reassign them.
+    // Safe: they are actor-isolated state.
+    private var basicService: WMFService?
+    private var mediaWikiService: WMFService?
     private let imageCache = NSCache<NSURL, NSData>()
     
     public init(basicService: WMFService? = WMFDataEnvironment.current.basicService, mediaWikiService: WMFService? = WMFDataEnvironment.current.mediaWikiService) {
