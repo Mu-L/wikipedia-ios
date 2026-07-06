@@ -169,7 +169,7 @@
 "description-help-about-description" = "Opisy artykułów podsumowują artykuł, aby ułatwić czytelnikom szybkie zrozumienie tematu.";
 "description-help-about-title" = "O tytule";
 "description-help-about-wikidata" = "O Wikidanych";
-"description-help-more-info-description" = "Opisy są przechowywane i przechowywane w Wikidata, projekcie Fundacji Wikimedia, który zapewnia bezpłatną, współpracującą, wielojęzyczną, wtórną bazę danych wspierającą Wikipedię i inne projekty.";
+"description-help-more-info-description" = "Opisy są przechowywane i utrzymywane w Wikidanych, projekcie Wikimedia Foundation, który stanowi bezpłatną, opartą na współpracy, wielojęzyczną bazę danych drugorzędnych wspierającą Wikipedię i inne projekty.";
 "description-help-more-info-title" = "Więcej informacji";
 "description-help-tips-description" = "Opisy powinny idealnie pasować do jednej linii i zawierać od dwóch do dwunastu słów. Nie są one pisane wielkimi literami, chyba że pierwsze słowo jest właściwym rzeczownikiem.";
 "description-help-tips-example-description-one" = "opis artykułu dla artykułu o Mona Lisie";
@@ -179,7 +179,7 @@
 "description-help-tips-for-example" = "Na przykład:";
 "description-help-tips-title" = "Wskazówki dotyczące tworzenia opisów";
 "description-help-title" = "Pomoc w opisie artykułu";
-"description-help-wikidata-guide" = "Przewodnik Wikidata do pisania opisów";
+"description-help-wikidata-guide" = "Przewodnik Wikidanych dotyczący tworzenia opisów";
 "description-published-button-title" = "Gotowe";
 "description-published-subtitle" = "Właśnie sprawiłeś, że Wikipedia jest lepsza dla wszystkich";
 "description-published-title" = "Opis opublikowany!";
