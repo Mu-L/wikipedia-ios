@@ -95,7 +95,9 @@ public struct WMFHomeView: View {
 
     @ViewBuilder
     private var communityTabContent: some View {
-        if !viewModel.communityPages.isEmpty {
+        if let makeEmbeddedViewController = viewModel.makeEmbeddedCommunityViewController {
+            WMFHomeEmbeddedCommunityView(makeViewController: makeEmbeddedViewController)
+        } else if !viewModel.communityPages.isEmpty {
             WMFCommunityFeedView(
                 pages: viewModel.communityPages,
                 moduleVisibility: viewModel.communityModuleVisibility,

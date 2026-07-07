@@ -40,6 +40,10 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
 
     @objc public weak var notificationsCenterPresentationDelegate: NotificationsCenterPresentationDelegate?
 
+    /// When true, Explore is embedded as a child of the Home tab (Community segment) and must not
+    /// configure or reset the shared navigation bar — the Home view controller owns it.
+    @objc public var isEmbeddedInHomeTab: Bool = false
+
     private weak var imageRecommendationsViewModel: WMFImageRecommendationsViewModel?
 
     private var yirDataController: WMFYearInReviewDataController? {
@@ -202,7 +206,9 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
         dataStore.feedContentController.dismissCollapsedContentGroups()
         stopMonitoringReachability()
         isGranularUpdatingEnabled = false
-        resetNavBarAppearance()
+        if !isEmbeddedInHomeTab {
+            resetNavBarAppearance()
+        }
     }
 
     open override func refresh() {
@@ -219,7 +225,9 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
     // MARK: Navigation Bar
 
     private func configureNavigationBar() {
-        
+
+        guard !isEmbeddedInHomeTab else { return }
+
         let titleConfig: WMFNavigationBarTitleConfig = WMFNavigationBarTitleConfig(title: CommonStrings.exploreTabTitle, customView: nil, alignment: .hidden)
         
         let profileButtonConfig = profileButtonConfig(target: self, action: #selector(userDidTapProfile), dataStore: dataStore, yirDataController: yirDataController)

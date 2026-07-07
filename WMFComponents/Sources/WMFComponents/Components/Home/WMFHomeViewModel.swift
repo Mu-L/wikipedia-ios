@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 import WMFData
 import WMFNativeLocalizations
 
@@ -49,6 +50,11 @@ public final class WMFHomeViewModel: ObservableObject {
     public var didSelectLanguage: ((WMFLanguage) -> Void)?
     public var didTapEditLanguages: (() -> Void)?
     public var didTapCustomizeInterests: (() -> Void)?
+
+    /// Temporary: when set (app-side), the Community tab hosts this legacy view controller instead of
+    /// the native SwiftUI community feed, and the community feed fetch is skipped. Remove once the
+    /// community feed rework ships.
+    public var makeEmbeddedCommunityViewController: (() -> UIViewController)?
 
     public func refreshForYouModuleVisibility() {
         forYouModuleVisibility = WMFForYouModuleVisibility(
@@ -130,6 +136,7 @@ public final class WMFHomeViewModel: ObservableObject {
     }
 
     public func loadCommunityFeedIfNeeded() {
+        guard makeEmbeddedCommunityViewController == nil else { return }
         guard communityPages.isEmpty, !isLoadingCommunity else { return }
         guard let language = selectedLanguage else { return }
         let project = WMFProject.wikipedia(language)
