@@ -1,5 +1,6 @@
 import XCTest
 import CoreData
+import WMFDataTestSupport
 
 @testable import WMFData
 @testable import WMFDataMocks
@@ -7,17 +8,20 @@ import CoreData
 final class WMFHomeDataControllerTests: XCTestCase {
 
     private let enProject = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
+    private let fixture = WMFDataTestFixture()
 
     override func setUp() async throws {
-        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        let store = try await WMFCoreDataStore(appContainerURL: temporaryDirectory)
+        try await super.setUp()
+        await fixture.setUp()
+        let store = try await fixture.makeTemporaryCoreDataStore()
         WMFDataEnvironment.current.coreDataStore = store
         WMFDataEnvironment.current.sharedCacheStore = WMFMockKeyValueStore()
+        await fixture.resetWMFDataTestState()
     }
 
     override func tearDown() async throws {
-        WMFDataEnvironment.current.coreDataStore = nil
-        WMFDataEnvironment.current.sharedCacheStore = nil
+        await fixture.tearDown()
+        try await super.tearDown()
     }
 
     private var dec11: Date {
