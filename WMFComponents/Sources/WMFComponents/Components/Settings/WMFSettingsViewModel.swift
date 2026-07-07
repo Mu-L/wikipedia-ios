@@ -294,7 +294,9 @@ final public class WMFSettingsViewModel: ObservableObject {
 
         var feedItems: [SettingsItem] = []
         if WMFDeveloperSettingsDataController.shared.enableHomeTab {
-            feedItems.append(SettingsItem(image: WMFSFSymbolIcon.for(symbol: .house), color: WMFColor.blue300, title: localizedStrings.homeFeedTitle, subtitle: nil, accessory: .chevron(label: nil), action: {
+            // Titled after the For You segment, since community customization is handled by the
+            // legacy feed settings row below while the reworked community feed is in development.
+            feedItems.append(SettingsItem(image: WMFSFSymbolIcon.for(symbol: .house), color: WMFColor.blue300, title: CommonStrings.forYouTabTitle, subtitle: nil, accessory: .chevron(label: nil), action: {
                 self.coordinatorDelegate?.handleSettingsAction(.homeFeed)
             }))
             // While the Home tab experiment is running, the legacy Explore feed powers the Community
