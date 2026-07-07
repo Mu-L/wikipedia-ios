@@ -97,7 +97,13 @@ public protocol WMFDeveloperSettingsDataControlling: AnyObject {
     /// `enableHomeTab` is also true.
     public var enableHomePhase2: Bool {
         get { (try? userDefaultsStore?.load(key: WMFUserDefaultsKey.developerSettingsEnableHomePhase2.rawValue)) ?? false }
-        set { try? userDefaultsStore?.save(key: WMFUserDefaultsKey.developerSettingsEnableHomePhase2.rawValue, value: newValue) }
+        set {
+            let oldValue = enableHomePhase2
+            try? userDefaultsStore?.save(key: WMFUserDefaultsKey.developerSettingsEnableHomePhase2.rawValue, value: newValue)
+            if oldValue != newValue {
+                NotificationCenter.default.post(name: WMFNSNotification.enableHomePhase2DidChange, object: nil)
+            }
+        }
     }
 
     public var enableYiRLoginExperimentControl: Bool {
