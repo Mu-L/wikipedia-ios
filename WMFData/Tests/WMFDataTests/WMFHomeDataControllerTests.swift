@@ -1,5 +1,6 @@
 import XCTest
 import CoreData
+import WMFDataTestSupport
 
 @testable import WMFData
 @testable import WMFDataMocks
@@ -7,17 +8,20 @@ import CoreData
 final class WMFHomeDataControllerTests: XCTestCase {
 
     private let enProject = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
+    private let fixture = WMFDataTestFixture()
 
     override func setUp() async throws {
-        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        let store = try await WMFCoreDataStore(appContainerURL: temporaryDirectory)
+        try await super.setUp()
+        await fixture.setUp()
+        let store = try await fixture.makeTemporaryCoreDataStore()
         WMFDataEnvironment.current.coreDataStore = store
         WMFDataEnvironment.current.sharedCacheStore = WMFMockKeyValueStore()
+        await fixture.resetWMFDataTestState()
     }
 
     override func tearDown() async throws {
-        WMFDataEnvironment.current.coreDataStore = nil
-        WMFDataEnvironment.current.sharedCacheStore = nil
+        await fixture.tearDown()
+        try await super.tearDown()
     }
 
     private var dec11: Date {
@@ -270,9 +274,8 @@ final class WMFHomeDataControllerTests: XCTestCase {
     func testFetchCommunityDeduplicatesSameDay() async throws {
         let (controller, spy) = makeController()
         _ = try await controller.fetchCommunity(project: enProject, date: dec11)
-        _ = try await controller.fetchCommunity(project: enProject, date: dec10)
-        _ = try await controller.fetchCommunity(project: enProject, date: dec10) // duplicate — should not be recorded
-        // fetchedDates should be [Dec 11, Dec 10]; previousPage anchors off Dec 10 → Dec 9.
+        _ = try await controller.fetchCommunity(project: enProject, date: dec10, forceFetch: true)
+        _ = try await controller.fetchCommunity(project: enProject, date: dec10, forceFetch: true) // duplicate — should not be recorded
         _ = try await controller.fetchCommunityPreviousPage(project: enProject)
         let calls = await spy.calls
         let calendar = Calendar(identifier: .gregorian)

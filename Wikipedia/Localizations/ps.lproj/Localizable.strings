@@ -34,7 +34,7 @@
 "account-creation-captcha-request-account" = "گڼون غوښتنه.";
 "account-creation-captcha-title" = "د کپچا خونديتوب کتنه";
 "account-creation-create-account" = "گڼون مو جوړ کړئ";
-"account-creation-have-account" = "لهٔ مخکې څخه گڼون لرې؟ $1";
+"account-creation-have-account" = "له مخکې څخه گڼون لرې؟ $1";
 "account-creation-log-in" = "ننوتل";
 "account-creation-logging-in" = "په ننوتلو کې دی...";
 "account-creation-missing-fields" = "تاسو بايد کارن‌نوم، پټنوم او پټنوم تاييد وليکئ؛ ترڅو يو گڼون جوړ کړئ.";
