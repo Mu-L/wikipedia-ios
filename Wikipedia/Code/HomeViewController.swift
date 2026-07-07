@@ -50,8 +50,12 @@ final class HomeViewController: UIViewController, WMFNavigationBarConfiguring, T
         viewModel.didTapCustomizeInterests = { [weak self] in
             self?.presentWhatsDrivingTest()
         }
-        viewModel.makeEmbeddedCommunityViewController = { [weak self] in
-            self?.embeddedExploreViewController() ?? UIViewController()
+        // While the reworked community feed (home phase 2) is in development, the Community segment
+        // hosts the legacy Explore feed. With phase 2 enabled, the new community feed renders instead.
+        if !WMFDeveloperSettingsDataController.shared.enableHomePhase2 {
+            viewModel.makeEmbeddedCommunityViewController = { [weak self] in
+                self?.embeddedExploreViewController() ?? UIViewController()
+            }
         }
         reloadLanguages()
     }

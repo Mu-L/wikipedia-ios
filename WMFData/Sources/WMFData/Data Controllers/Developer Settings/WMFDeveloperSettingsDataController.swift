@@ -92,8 +92,9 @@ public protocol WMFDeveloperSettingsDataControlling: AnyObject {
         }
     }
 
-    /// Gates home feed work that ships after the initial Home tab experiment (e.g. the reworked
-    /// community feed settings). Only has an effect when `enableHomeTab` is also true.
+    /// Gates home feed work that ships after the initial Home tab experiment: the reworked community
+    /// feed (replacing the embedded legacy Explore feed) and its settings. Only has an effect when
+    /// `enableHomeTab` is also true.
     public var enableHomePhase2: Bool {
         get { (try? userDefaultsStore?.load(key: WMFUserDefaultsKey.developerSettingsEnableHomePhase2.rawValue)) ?? false }
         set { try? userDefaultsStore?.save(key: WMFUserDefaultsKey.developerSettingsEnableHomePhase2.rawValue, value: newValue) }
