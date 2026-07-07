@@ -1323,6 +1323,7 @@
 "settings-clear-cache-are-you-sure-title" = "Title for the confirmation presented to the user to verify they are sure they want to clear clear cached data.";
 "settings-clear-cache-cancel" = "Cancel action to clear cached data {{Identical|Cancel}}";
 "settings-clear-cache-ok" = "Confirm action to clear cached data";
+"settings-community-feed-title" = "Title for the Community feed settings item in Settings, shown while the Home tab experiment is enabled. {{Identical|Community}}";
 "settings-donate" = "Link to donate";
 "settings-explore-games-subtitle" = "Subtitle for Games section in Explore settings";
 "settings-explore-games-title" = "Title for Games section in Explore settings";

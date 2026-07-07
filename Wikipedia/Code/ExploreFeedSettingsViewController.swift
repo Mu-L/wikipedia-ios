@@ -186,7 +186,10 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
     }
     
     private func configureNavigationBar() {
-        let titleConfig = WMFNavigationBarTitleConfig(title: CommonStrings.exploreFeedTitle, customView: nil, alignment: .centerCompact)
+        // While the Home tab experiment is running, this feed powers the Community segment of the
+        // Home tab, so the screen is titled Community instead of Explore feed.
+        let title = WMFDeveloperSettingsDataController.shared.enableHomeTab ? CommonStrings.communityFeedTitle : CommonStrings.exploreFeedTitle
+        let titleConfig = WMFNavigationBarTitleConfig(title: title, customView: nil, alignment: .centerCompact)
         var closeConfig: WMFLargeCloseButtonConfig? = nil
         
         if showCloseButton {

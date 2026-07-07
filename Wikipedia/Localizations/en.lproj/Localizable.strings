@@ -1323,6 +1323,7 @@
 "settings-clear-cache-are-you-sure-title" = "Clear cached data?";
 "settings-clear-cache-cancel" = "Cancel";
 "settings-clear-cache-ok" = "Clear cache";
+"settings-community-feed-title" = "Community";
 "settings-donate" = "Donate";
 "settings-explore-games-subtitle" = "Daily games based on Wikipedia content";
 "settings-explore-games-title" = "Wikipedia games";
