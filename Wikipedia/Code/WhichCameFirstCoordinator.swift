@@ -454,10 +454,13 @@ final class WhichCameFirstCoordinator: NSObject, Coordinator {
             let archiveData = (try? await self.gamesDataController.fetchWhichCameFirstArchiveData(project: project))
                 ?? WMFGamesDataController.WMFWhichCameFirstArchiveData(playedDates: [:], pausedDates: [])
 
+            let pausedDates = archiveData.pausedDates
             let viewModel = WMFWhichCameFirstArchiveViewModel(
                 playedDates: archiveData.playedDates,
-                pausedDates: archiveData.pausedDates,
+                pausedDates: pausedDates,
                 onSelectDate: { [weak self] date in
+                    let elementId = pausedDates.contains(date) ? "game_play_continue" : "game_play_start"
+                    self?.logClick(actionSource: "game_start", actionSubtype: "game_archive_calendar", elementId: elementId, actionContext: ["archive": "true"])
                     self?.showGameForArchiveDate(date)
                 }
             )
@@ -468,7 +471,9 @@ final class WhichCameFirstCoordinator: NSObject, Coordinator {
                 sheet.detents = [.large()]
                 sheet.prefersGrabberVisible = false
             }
-            presenter.present(nav, animated: true)
+            presenter.present(nav, animated: true) { [weak self] in
+                self?.logImpression(actionSource: "game_start", actionSubtype: "game_archive_calendar", actionContext: ["archive": "true"])
+            }
         }
     }
 
@@ -527,21 +532,20 @@ final class WhichCameFirstCoordinator: NSObject, Coordinator {
         )
     }
 
-    private func logClick(actionSource: String, actionSubtype: String? = nil, elementId: String) {
+    private func logClick(actionSource: String, actionSubtype: String? = nil, elementId: String, actionContext: [String: String]? = nil) {
         instrument.submitInteraction(
             action: "click",
             actionSource: actionSource,
             actionSubtype: actionSubtype,
-            elementId: elementId
+            elementId: elementId,
+            actionContext: actionContext
         )
     }
 
     // MARK: - Helpers
 
     private func formattedTodayDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.setLocalizedDateFormatFromTemplate("MMMMd")
-        return formatter.string(from: Date())
+        return DateFormatter.wmfMonthDayShortYearDateFormatter.string(from: Date())
     }
 
     private func formattedTodayISODateString() -> String {
