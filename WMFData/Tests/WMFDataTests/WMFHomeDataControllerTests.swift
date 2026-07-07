@@ -270,9 +270,8 @@ final class WMFHomeDataControllerTests: XCTestCase {
     func testFetchCommunityDeduplicatesSameDay() async throws {
         let (controller, spy) = makeController()
         _ = try await controller.fetchCommunity(project: enProject, date: dec11)
-        _ = try await controller.fetchCommunity(project: enProject, date: dec10)
-        _ = try await controller.fetchCommunity(project: enProject, date: dec10) // duplicate — should not be recorded
-        // fetchedDates should be [Dec 11, Dec 10]; previousPage anchors off Dec 10 → Dec 9.
+        _ = try await controller.fetchCommunity(project: enProject, date: dec10, forceFetch: true)
+        _ = try await controller.fetchCommunity(project: enProject, date: dec10, forceFetch: true) // duplicate — should not be recorded
         _ = try await controller.fetchCommunityPreviousPage(project: enProject)
         let calls = await spy.calls
         let calendar = Calendar(identifier: .gregorian)
