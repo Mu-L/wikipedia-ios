@@ -92,6 +92,6 @@ public extension DateFormatter {
         parser.dateFormat = "yyyy-MM-dd"
         parser.locale = Locale(identifier: "en_US_POSIX")
         guard let date = parser.date(from: dateString) else { return dateString }
-        return wmfMonthDayShortYearDateFormatter.string(from: date)
+        return wmfMonthDayYearDateFormatter.string(from: date)
     }
 }
