@@ -1,6 +1,7 @@
 import UIKit
 import Combine
 
+@MainActor
 public final class WMFAppOnboardingHostingController: WMFComponentHostingController<WMFAppOnboardingView> {
 
     private let viewModel: WMFAppOnboardingViewModel
@@ -13,13 +14,13 @@ public final class WMFAppOnboardingHostingController: WMFComponentHostingControl
         stepSubscription = viewModel.$currentStepIndex
             .removeDuplicates()
             .sink { [weak self] _ in
-                Task { @MainActor [weak self] in
+                MainActor.assumeIsolated {
                     self?.setNeedsStatusBarAppearanceUpdate()
                 }
             }
     }
 
-    @MainActor required dynamic init?(coder aDecoder: NSCoder) {
+    required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
