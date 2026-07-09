@@ -5,7 +5,6 @@ import WMFData
 import CocoaLumberjackSwift
 import WMFNativeLocalizations
 import WMFTestKitchen
-import HCaptcha
 
 class WMFLoginViewController: WMFScrollViewController, UITextFieldDelegate, WMFCaptchaViewControllerDelegate, Themeable, WMFNavigationBarConfiguring {
     // SINGLETONTODO
@@ -467,7 +466,7 @@ class WMFLoginViewController: WMFScrollViewController, UITextFieldDelegate, WMFC
 
     private func fetchAndSetupHCaptchaFinePrint() {
         let appLanguage = dataStore.languageLinkController.appLanguage
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
 
             guard let self else { return }
 
@@ -477,12 +476,9 @@ class WMFLoginViewController: WMFScrollViewController, UITextFieldDelegate, WMFC
             do {
                 let finePrintText = try await MessagesDataController().fetchMessages(keys: ["hcaptcha-privacy-policy"], parseLinks: true, project: project).first?.content
 
-                Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    self.hCaptchaFinePrintText = finePrintText
-                    self.setupHCaptchaFinePrintText()
-                    self.hcaptchaFinePrintTextView.isHidden = false
-                }
+                self.hCaptchaFinePrintText = finePrintText
+                self.setupHCaptchaFinePrintText()
+                self.hcaptchaFinePrintTextView.isHidden = finePrintText?.isEmpty != false
             } catch {
                 self.hcaptchaFinePrintTextView.isHidden = true
             }
@@ -499,15 +495,15 @@ class WMFLoginViewController: WMFScrollViewController, UITextFieldDelegate, WMFC
         hcaptchaVC.modalTransitionStyle = .crossDissolve
         hcaptchaVC.modalPresentationStyle = .overFullScreen
 
-        hcaptchaVC.successAction = { token in
-            hcaptchaVC.dismiss(animated: true) { [weak self] in
+        hcaptchaVC.successAction = { [weak hcaptchaVC, weak self] token in
+            hcaptchaVC?.dismiss(animated: true) {
                 self?.hCaptchaToken = token
                 self?.save()
             }
         }
 
-        hcaptchaVC.errorAction = { error in
-            hcaptchaVC.dismiss(animated: true) { [weak self] in
+        hcaptchaVC.errorAction = { [weak hcaptchaVC, weak self] error in
+            hcaptchaVC?.dismiss(animated: true) {
                 self?.hCaptchaToken = nil
                 self?.setViewControllerUserInteraction(enabled: true)
                 self?.enableProgressiveButtonIfNecessary()
