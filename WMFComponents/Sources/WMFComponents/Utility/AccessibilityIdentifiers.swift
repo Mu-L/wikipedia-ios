@@ -106,6 +106,14 @@ public enum AccessibilityIdentifiers {
         public static let skipButton = "App Onboarding Skip Button"
     }
 
+    public enum Interests {
+        public static let deselectAllButton = "Interests Deselect All Button"
+        public static let searchField = "Interests Search Field"
+        public static let searchLanguageButton = "Interests Search Language Button"
+        public static let searchResultRow = "Interests Search Result Row"
+        public static let view = "Interests View"
+    }
+
     public enum LanguageSelection {
         public static let allLanguagesView = "All Languages View"
         public static let languagesView = "Languages View"
