@@ -1605,6 +1605,9 @@
 		A77070232DF6ECB500D9F09B /* SearchWidget+LocalizedStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77070222DF6ECA400D9F09B /* SearchWidget+LocalizedStrings.swift */; };
 		A7B292132DF1CF9D001C213F /* SearchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B292122DF1CF9D001C213F /* SearchWidget.swift */; };
 		AA001001AA001001AA001001 /* ReadingChallengeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA001000AA001000AA001000 /* ReadingChallengeWidget.swift */; };
+		AB0NB0A260E0E9F600ABCD02 /* AppOnboardingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0NB0A160E0E9F600ABCD01 /* AppOnboardingCoordinator.swift */; };
+		AB0NB0A360E0E9F600ABCD03 /* AppOnboardingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0NB0A160E0E9F600ABCD01 /* AppOnboardingCoordinator.swift */; };
+		AB0NB0A460E0E9F600ABCD04 /* AppOnboardingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0NB0A160E0E9F600ABCD01 /* AppOnboardingCoordinator.swift */; };
 		AD82B5762FC0D83F00F310B2 /* ArticlePreviewingDelegateMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD82B5752FC0D83F00F310B2 /* ArticlePreviewingDelegateMock.swift */; };
 		B00050141C52D73800515F70 /* UIApplication+RTL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00050131C52D73800515F70 /* UIApplication+RTL.swift */; };
 		B0016CB921354D9D00FA1096 /* AutoLayoutSafeMultiLineButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0016CB821354D9D00FA1096 /* AutoLayoutSafeMultiLineButton.swift */; };
@@ -3719,6 +3722,7 @@
 		A77070222DF6ECA400D9F09B /* SearchWidget+LocalizedStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchWidget+LocalizedStrings.swift"; sourceTree = "<group>"; };
 		A7B292122DF1CF9D001C213F /* SearchWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchWidget.swift; sourceTree = "<group>"; };
 		AA001000AA001000AA001000 /* ReadingChallengeWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingChallengeWidget.swift; sourceTree = "<group>"; };
+		AB0NB0A160E0E9F600ABCD01 /* AppOnboardingCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppOnboardingCoordinator.swift; sourceTree = "<group>"; };
 		AD82B5752FC0D83F00F310B2 /* ArticlePreviewingDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePreviewingDelegateMock.swift; sourceTree = "<group>"; };
 		B00050131C52D73800515F70 /* UIApplication+RTL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+RTL.swift"; sourceTree = "<group>"; };
 		B0016CB821354D9D00FA1096 /* AutoLayoutSafeMultiLineButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLayoutSafeMultiLineButton.swift; sourceTree = "<group>"; };
@@ -6337,6 +6341,7 @@
 				675C97132F297EAC00830CEF /* SavedAllArticlesCoordinator.swift */,
 				37C5C1FA2DC28D350082852E /* TabsOverviewCoordinator.swift */,
 				370107A92D5EEBF600E17486 /* TempAccountSheetCoordinator.swift */,
+				AB0NB0A160E0E9F600ABCD01 /* AppOnboardingCoordinator.swift */,
 				675826732D68CEB8002B0EE7 /* ArticleCoordinator.swift */,
 				675826812D69394E002B0EE7 /* RandomArticleCoordinator.swift */,
 				FACE0000000000000000FE01 /* HomeCoordinator.swift */,
@@ -9831,6 +9836,7 @@
 				83B1218427FC8750006B8CCC /* RemoteNotificationsFunnel.swift in Sources */,
 				0072991A28AC4C8B00DCD2E6 /* TalkPageCellCommentView.swift in Sources */,
 				370107AC2D5EEBFE00E17486 /* TempAccountSheetCoordinator.swift in Sources */,
+				AB0NB0A260E0E9F600ABCD02 /* AppOnboardingCoordinator.swift in Sources */,
 				D8C4D3D81FD5D9260089CEC2 /* TUSafariActivity.m in Sources */,
 				7AF8CEED22653406000B7676 /* InsertMediaSelectedImageView.swift in Sources */,
 				838790B32858009000067B1D /* TalkPageFetcher.swift in Sources */,
@@ -10438,6 +10444,7 @@
 				0042812F25E6E841004945B3 /* NYTPhotoCaptionView.m in Sources */,
 				B0EFCD6E1EBF12E5008F36E5 /* LibrariesUsed.swift in Sources */,
 				370107AB2D5EEBFE00E17486 /* TempAccountSheetCoordinator.swift in Sources */,
+				AB0NB0A360E0E9F600ABCD03 /* AppOnboardingCoordinator.swift in Sources */,
 				D8CE24E81E698E2400DAE2E0 /* WMFCaptchaResetter.swift in Sources */,
 				00E2EA8B26E28A9700B1A741 /* NotificationsCenterCellStyle.swift in Sources */,
 				00D1F59128885BA300127169 /* TalkPageViewModel.swift in Sources */,
@@ -10989,6 +10996,7 @@
 				B0D3E70E214AF776007578BA /* DescriptionEditViewController.swift in Sources */,
 				B0F4761D21F921D300C4E254 /* EditSummaryViewController.swift in Sources */,
 				370107AA2D5EEBFE00E17486 /* TempAccountSheetCoordinator.swift in Sources */,
+				AB0NB0A460E0E9F600ABCD04 /* AppOnboardingCoordinator.swift in Sources */,
 				B0EFCD6F1EBF12E5008F36E5 /* LibrariesUsed.swift in Sources */,
 				00E2EA8A26E28A9700B1A741 /* NotificationsCenterCellStyle.swift in Sources */,
 				00D1F59028885BA300127169 /* TalkPageViewModel.swift in Sources */,
