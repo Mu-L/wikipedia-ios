@@ -59,6 +59,8 @@ struct WMFAppOnboardingToolbar: View {
     @ObservedObject var viewModel: WMFAppOnboardingViewModel
     let theme: WMFTheme
 
+    private static let controlHeight: CGFloat = 44
+
     var body: some View {
         ZStack {
             if viewModel.showsSkipAndDots {
@@ -69,11 +71,8 @@ struct WMFAppOnboardingToolbar: View {
                     .font(Font(WMFFont.for(.body)))
                     .foregroundStyle(Color(uiColor: theme.text))
                     .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
-                    .background(
-                        Capsule()
-                            .fill(Color(uiColor: theme.midBackground).opacity(0.9))
-                    )
+                    .frame(height: Self.controlHeight)
+                    .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: true))
                     .accessibilityIdentifier(AccessibilityIdentifiers.Onboarding.skipButton)
 
                     Spacer()
@@ -100,11 +99,8 @@ struct WMFAppOnboardingToolbar: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 16)
-        .background(
-            Capsule()
-                .fill(Color(uiColor: theme.midBackground).opacity(0.9))
-        )
+        .frame(height: Self.controlHeight)
+        .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: false))
     }
 
     private var nextButton: some View {
@@ -113,17 +109,36 @@ struct WMFAppOnboardingToolbar: View {
                 viewModel.advance()
             }
         } label: {
-            ZStack {
-                Circle()
-                    .fill(Color(uiColor: theme.link))
-                    .frame(width: 56, height: 56)
+            Group {
                 if let chevron = WMFSFSymbolIcon.for(symbol: .chevronForward, font: .boldHeadline) {
                     Image(uiImage: chevron)
-                        .foregroundStyle(Color(uiColor: theme.paperBackground))
+                        .foregroundStyle(Color(uiColor: theme.text))
                 }
             }
+            .frame(width: Self.controlHeight, height: Self.controlHeight)
         }
+        .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: true))
         .accessibilityLabel(viewModel.nextAccessibilityLabel)
         .accessibilityIdentifier(AccessibilityIdentifiers.Onboarding.nextButton)
+    }
+}
+
+/// Shared background for the onboarding toolbar controls: liquid glass on iOS 26+,
+/// a translucent capsule on earlier versions.
+private struct WMFAppOnboardingPillBackground: ViewModifier {
+    let theme: WMFTheme
+    let isInteractive: Bool
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: Capsule())
+        } else {
+            content
+                .background(
+                    Capsule()
+                        .fill(Color(uiColor: theme.midBackground).opacity(0.9))
+                )
+        }
     }
 }
