@@ -1,0 +1,111 @@
+import Testing
+@testable import WMFComponents
+@testable import WMFData
+@testable import WMFDataMocks
+
+@MainActor
+@Suite
+struct WMFAppOnboardingViewModelTests {
+
+    private final class CompletionBox {
+        var completed = false
+    }
+
+    private func makeViewModel(languages: [WMFAppOnboardingViewModel.LanguageItem] = [],
+                               completionBox: CompletionBox = CompletionBox()) -> WMFAppOnboardingViewModel {
+        let project = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
+        let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(dataController: WMFHomeDataController(userDefaultsStore: WMFMockKeyValueStore()), project: project)
+        return WMFAppOnboardingViewModel(
+            languages: languages,
+            interestsViewModel: interestsViewModel,
+            didTapLearnMoreAboutWikipedia: {},
+            didTapPrivacyPolicy: {},
+            didTapTermsOfUse: {},
+            didTapAddLanguages: {},
+            onCompletion: { completionBox.completed = true }
+        )
+    }
+
+    @Test
+    func stepsAreInExpectedOrder() {
+        let viewModel = makeViewModel()
+        #expect(viewModel.steps == [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests])
+        #expect(viewModel.currentStep == .intro)
+    }
+
+    @Test
+    func advanceMovesThroughAllSteps() {
+        let viewModel = makeViewModel()
+        viewModel.advance()
+        #expect(viewModel.currentStep == .dataPrivacy)
+        viewModel.advance()
+        #expect(viewModel.currentStep == .languages)
+        viewModel.advance()
+        #expect(viewModel.currentStep == .personalizationIntro)
+        viewModel.advance()
+        #expect(viewModel.currentStep == .interests)
+    }
+
+    @Test
+    func advanceOnLastStepCallsCompletion() {
+        let box = CompletionBox()
+        let viewModel = makeViewModel(completionBox: box)
+        for _ in 0..<(viewModel.steps.count - 1) {
+            viewModel.advance()
+        }
+        #expect(box.completed == false)
+        viewModel.advance()
+        #expect(box.completed == true)
+    }
+
+    @Test
+    func skipCallsCompletionImmediately() {
+        let box = CompletionBox()
+        let viewModel = makeViewModel(completionBox: box)
+        viewModel.advance() // dataPrivacy
+        viewModel.skip()
+        #expect(box.completed == true)
+    }
+
+    @Test
+    func skipAndDotsOnlyShowOnPersonalizationSteps() {
+        let viewModel = makeViewModel()
+        #expect(viewModel.showsSkipAndDots == false) // intro
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == false) // dataPrivacy
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == false) // languages
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == true) // personalizationIntro
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == true) // interests
+    }
+
+    @Test
+    func dotIndexTracksPersonalizationSteps() {
+        let viewModel = makeViewModel()
+        #expect(viewModel.currentDotIndex == nil) // intro
+        #expect(viewModel.personalizationSteps.count == 2)
+
+        viewModel.advance() // dataPrivacy
+        viewModel.advance() // languages
+        viewModel.advance() // personalizationIntro
+        #expect(viewModel.currentDotIndex == 0)
+        viewModel.advance() // interests
+        #expect(viewModel.currentDotIndex == 1)
+    }
+
+    @Test
+    func updateLanguagesReplacesList() {
+        let initial = [WMFAppOnboardingViewModel.LanguageItem(id: "en", displayName: "English", isPrimary: true)]
+        let viewModel = makeViewModel(languages: initial)
+        #expect(viewModel.languages.count == 1)
+
+        viewModel.updateLanguages([
+            WMFAppOnboardingViewModel.LanguageItem(id: "en", displayName: "English", isPrimary: true),
+            WMFAppOnboardingViewModel.LanguageItem(id: "zh", displayName: "中文", isPrimary: false)
+        ])
+        #expect(viewModel.languages.count == 2)
+        #expect(viewModel.languages.last?.isPrimary == false)
+    }
+}

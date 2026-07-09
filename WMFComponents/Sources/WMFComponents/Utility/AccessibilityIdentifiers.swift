@@ -98,11 +98,16 @@ public enum AccessibilityIdentifiers {
         public static let addLanguagesButton = "App Onboarding Add Languages Button"
         public static let analyticsLearnMoreButton = "App Onboarding Analytics Learn More Button"
         public static let analyticsView = "App Onboarding Analytics View"
+        public static let dataPrivacyView = "App Onboarding Data Privacy View"
         public static let explorationView = "App Onboarding Exploration View"
         public static let introductionLearnMoreButton = "App Onboarding Introduction Learn More Button"
         public static let introductionView = "App Onboarding Introduction View"
+        public static let introView = "App Onboarding Intro View"
         public static let languagesView = "App Onboarding Languages View"
+        public static let learnMoreLink = "App Onboarding Learn More Link"
         public static let nextButton = "App Onboarding Next Button"
+        public static let personalizationIntroView = "App Onboarding Personalization Intro View"
+        public static let privacyLinks = "App Onboarding Privacy Links"
         public static let skipButton = "App Onboarding Skip Button"
     }
 
