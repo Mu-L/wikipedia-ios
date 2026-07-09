@@ -123,8 +123,6 @@ struct WMFAppOnboardingToolbar: View {
     }
 }
 
-/// Shared background for the onboarding toolbar controls: liquid glass on iOS 26+,
-/// a translucent capsule on earlier versions.
 private struct WMFAppOnboardingPillBackground: ViewModifier {
     let theme: WMFTheme
     let isInteractive: Bool

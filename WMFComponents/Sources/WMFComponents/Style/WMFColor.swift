@@ -56,5 +56,6 @@ public enum WMFColor {
     public static let matchReplacedBackground = UIColor(0xD0E4fC)
     
     public static let successGreen = UIColor(0x14866D)
+    public static let fillTertiary = UIColor(0x767680, alpha: 0.12)
 
 }

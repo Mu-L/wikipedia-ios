@@ -255,19 +255,25 @@ private struct TopicChipView: View {
     let isSelected: Bool
     let theme: WMFTheme
 
+    private var foregroundColor: Color {
+        isSelected ? Color(uiColor: theme.paperBackground) : Color(uiColor: theme.text)
+    }
+
     var body: some View {
-        Text(title)
-            .font(Font(WMFFont.for(.subheadline)))
-            .foregroundStyle(isSelected ? Color(uiColor: theme.paperBackground) : Color(uiColor: theme.link))
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
-            .background(
-                Capsule()
-                    .fill(isSelected ? Color(uiColor: theme.link) : Color.clear)
-            )
-            .overlay(
-                Capsule()
-                    .strokeBorder(Color(uiColor: theme.link), lineWidth: 1.5)
-            )
+        HStack(alignment: .center, spacing: 4) {
+            if let icon = WMFSFSymbolIcon.for(symbol: isSelected ? .checkmark : .add, font: .subheadline) {
+                Image(uiImage: icon)
+                    .foregroundStyle(foregroundColor)
+            }
+            Text(title)
+                .font(Font(WMFFont.for(.subheadline)))
+                .foregroundStyle(foregroundColor)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 7)
+        .background(
+            Capsule()
+                .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.tertiaryBackground))
+        )
     }
 }
