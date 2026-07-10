@@ -55,6 +55,8 @@ public struct WMFReadingChallengeWidgetView: View {
                     smallConcludedIncompleteView
                 case .challengeConcludedNoStreak, .challengeRemoved:
                     smallConcludedNoStreakView
+                case .postChallengeRandomizer:
+                    postChallengeRandomizerSmallView
                 }
             case .systemMedium:
                 switch viewModel.state {
@@ -72,6 +74,8 @@ public struct WMFReadingChallengeWidgetView: View {
                     mediumConcludedIncompleteView
                 case .challengeConcludedNoStreak, .challengeRemoved:
                     mediumConcludedNoStreakView
+                case .postChallengeRandomizer:
+                    postChallengeRandomizerMediumView
                 }
             default:
                 smallView
@@ -448,8 +452,79 @@ public struct WMFReadingChallengeWidgetView: View {
             wIconOverlay
         }
     }
+    
+    private var postChallengeRandomizerSmallView: some View {
+        ZStack {
+            VStack(alignment: .center, spacing: 10) {
+                if let uiImage = UIImage(named: viewModel.displaySet.image, in: .module, with: nil) {
+                    Spacer()
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 100)
+                }
+                if let button1Title = viewModel.displaySet.button1Title,
+                   let button1URL = viewModel.displaySet.button1URL {
+                    Link(destination: button1URL) {
+                        HStack {
+                            Text(button1Title)
+                                .font(Font(WMFFont.for(.semiboldSubheadline, compatibleWith: traitCollection)))
+                                .foregroundColor(buttonForeground)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(buttonBackground)
+                        .clipShape(Capsule())
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            wIconOverlay
+        }
+    }
 
     // MARK: - Medium View (generic: streak completed, incomplete, etc.)
+    
+    private var postChallengeRandomizerMediumView: some View {
+        GeometryReader { geo in
+            let scale = min(geo.size.width / mediumCanvasWidth, geo.size.height / mediumCanvasHeight)
+
+            ZStack {
+                VStack(alignment: .center, spacing: 10) {
+                    if let uiImage = UIImage(named: viewModel.displaySet.image, in: .module, with: nil) {
+                        Spacer()
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 100)
+                    }
+                    if let button1Title = viewModel.displaySet.button1Title,
+                       let button1URL = viewModel.displaySet.button1URL {
+                        Link(destination: button1URL) {
+                            HStack {
+                                Text(button1Title)
+                                    .font(Font(WMFFont.for(.semiboldSubheadline, compatibleWith: traitCollection)))
+                                    .foregroundColor(buttonForeground)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, 12).padding(.vertical, 6)
+                            .background(buttonBackground)
+                            .clipShape(Capsule())
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                wIconOverlay
+            }
+            .frame(width: mediumCanvasWidth, height: mediumCanvasHeight)
+            .scaleEffect(scale, anchor: .center)
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
+        }
+    }
     
     private var mediumTitleFont: Font {
         switch viewModel.state {

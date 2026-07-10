@@ -450,8 +450,8 @@ extension WMFPageViewsDataController {
         let maxDateToCompleteStreak = calendar.startOfDay(for: endDateStart.addingTimeInterval(TimeInterval((config.streakGoal * oneDayInSeconds))))
 
         if todayStart >= removeDateStart {
-            sendHeartbeat(elementId: "challenge_removed")
-            return .challengeRemoved
+            sendHeartbeat(elementId: "randomizer_initiated") // todo
+            return .postChallengeRandomizer
         }
 
         if todayStart < startDateStart {
@@ -461,8 +461,8 @@ extension WMFPageViewsDataController {
 
         guard isEnrolled else {
             if todayStart > endDateStart {
-                sendHeartbeat(elementId: "challenge_no_streak")
-                return .challengeConcludedNoStreak
+                sendHeartbeat(elementId: "randomizer_initiatied_no_enroll") // todo
+                return .postChallengeRandomizer
             }
             sendHeartbeat(elementId: "not_enrolled")
             return .notEnrolled

@@ -10,6 +10,7 @@ public enum ReadingChallengeState: Equatable, Codable, Hashable {
     case challengeCompleted
     case challengeConcludedIncomplete(streak: Int)
     case challengeConcludedNoStreak
+    case postChallengeRandomizer
 }
 
 public enum ReadingChallengeStateConfig {
