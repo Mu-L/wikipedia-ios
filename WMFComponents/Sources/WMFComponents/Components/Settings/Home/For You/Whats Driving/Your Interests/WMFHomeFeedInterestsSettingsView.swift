@@ -91,60 +91,32 @@ public struct WMFHomeFeedInterestsSettingsView: View {
     // MARK: - Search
 
     private var searchBar: some View {
-        HStack(spacing: 8) {
-            HStack(spacing: 6) {
-                if let magnifyingGlass = WMFSFSymbolIcon.for(symbol: .magnifyingGlass) {
-                    Image(uiImage: magnifyingGlass)
+        searchBarContent
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .modifier(WMFInterestsSearchBarBackground(theme: theme))
+    }
+
+    private var searchBarContent: some View {
+        HStack(spacing: 6) {
+            if let magnifyingGlass = WMFSFSymbolIcon.for(symbol: .magnifyingGlass) {
+                Image(uiImage: magnifyingGlass)
+                    .foregroundStyle(Color(uiColor: theme.secondaryText))
+            }
+            TextField(viewModel.searchPlaceholder, text: $viewModel.searchTerm)
+                .font(Font(WMFFont.for(.body)))
+                .foregroundStyle(Color(uiColor: theme.text))
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+                .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchField)
+
+            if viewModel.isSearchActive, let clearIcon = WMFSFSymbolIcon.for(symbol: .closeCircleFill) {
+                Button {
+                    viewModel.clearSearch()
+                } label: {
+                    Image(uiImage: clearIcon)
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                 }
-                TextField(viewModel.searchPlaceholder, text: $viewModel.searchTerm)
-                    .font(Font(WMFFont.for(.body)))
-                    .foregroundStyle(Color(uiColor: theme.text))
-                    .autocorrectionDisabled()
-                    .textInputAutocapitalization(.never)
-                    .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchField)
-
-                if viewModel.isSearchActive, let clearIcon = WMFSFSymbolIcon.for(symbol: .closeCircleFill) {
-                    Button {
-                        viewModel.clearSearch()
-                    } label: {
-                        Image(uiImage: clearIcon)
-                            .foregroundStyle(Color(uiColor: theme.secondaryText))
-                    }
-                }
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(uiColor: theme.midBackground))
-            )
-
-            if viewModel.searchLanguages.count > 1 {
-                Menu {
-                    ForEach(viewModel.searchLanguages, id: \.languageCode) { language in
-                        Button {
-                            viewModel.selectSearchLanguage(language)
-                        } label: {
-                            if language == viewModel.searchLanguage {
-                                Label(language.localizedName, systemImage: "checkmark")
-                            } else {
-                                Text(language.localizedName)
-                            }
-                        }
-                    }
-                } label: {
-                    Text(viewModel.searchLanguage.languageCode.uppercased())
-                        .font(Font(WMFFont.for(.boldSubheadline)))
-                        .foregroundStyle(Color(uiColor: theme.link))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .strokeBorder(Color(uiColor: theme.border), lineWidth: 1)
-                        )
-                }
-                .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchLanguageButton)
             }
         }
     }
@@ -187,6 +159,25 @@ public struct WMFHomeFeedInterestsSettingsView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+        }
+    }
+}
+
+/// Capsule background for the interests search bar: liquid glass on iOS 26+,
+/// a filled capsule on earlier versions.
+private struct WMFInterestsSearchBarBackground: ViewModifier {
+    let theme: WMFTheme
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(.regular.interactive(), in: Capsule())
+        } else {
+            content
+                .background(
+                    Capsule()
+                        .fill(Color(uiColor: theme.midBackground))
+                )
         }
     }
 }
