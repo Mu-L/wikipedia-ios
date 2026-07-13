@@ -25,7 +25,8 @@ final class AppOnboardingCoordinator: NSObject {
     }
 
     func start() {
-        let language = WMFHomeDataController.shared.selectedLanguage() ?? WMFDataEnvironment.current.primaryAppLanguage ?? WMFLanguage(languageCode: "en", languageVariantCode: nil)
+        // Topics and articles derive from the app's primary language, not any feed-selected language
+        let language = preferredWMFLanguages().first ?? WMFDataEnvironment.current.primaryAppLanguage ?? WMFLanguage(languageCode: "en", languageVariantCode: nil)
         let project = WMFProject.wikipedia(language)
         let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(project: project, searchLanguages: preferredWMFLanguages())
         let feedPreferenceViewModel = WMFAppOnboardingFeedPreferenceViewModel(project: project)
