@@ -28,6 +28,7 @@ final class NewAppOnboardingUITests: XCTestCase {
             case languages = "New App Onboarding Languages"
             case personalizationIntro = "New App Onboarding Personalization Intro"
             case interests = "New App Onboarding Interests"
+            case feedPreference = "New App Onboarding Feed Preference"
         }
 
         let app = launchWikipediaAppRobot(onboardingState: .notCompleted, enablesHomeTab: true)
@@ -47,12 +48,15 @@ final class NewAppOnboardingUITests: XCTestCase {
             .tapNext()
             .assertPage(.interests)
             .captureScreenshot(ScreenshotNames.interests)
+            .tapNext()
+            .assertPage(.feedPreference)
+            .captureScreenshot(ScreenshotNames.feedPreference)
     }
 
     func testAdvanceThroughAllStepsCompletesOnboarding() throws {
         launchWikipediaAppRobot(onboardingState: .notCompleted, enablesHomeTab: true)
             .newOnboarding
-            .advance(to: .interests)
+            .advance(to: .feedPreference)
             .tapNext()
             .assertDismissed()
     }

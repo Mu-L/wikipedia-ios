@@ -23,6 +23,7 @@ extension NewOnboardingRobot {
         case languages
         case personalizationIntro
         case interests
+        case feedPreference
 
         var accessibilityIdentifier: String {
             switch self {
@@ -36,6 +37,8 @@ extension NewOnboardingRobot {
                 return AccessibilityIdentifiers.Onboarding.personalizationIntroView
             case .interests:
                 return AccessibilityIdentifiers.Interests.view
+            case .feedPreference:
+                return AccessibilityIdentifiers.Onboarding.feedPreferenceView
             }
         }
     }

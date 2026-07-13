@@ -28,10 +28,12 @@ final class AppOnboardingCoordinator: NSObject {
         let language = WMFHomeDataController.shared.selectedLanguage() ?? WMFDataEnvironment.current.primaryAppLanguage ?? WMFLanguage(languageCode: "en", languageVariantCode: nil)
         let project = WMFProject.wikipedia(language)
         let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(project: project, searchLanguages: preferredWMFLanguages())
+        let feedPreferenceViewModel = WMFAppOnboardingFeedPreferenceViewModel(project: project)
 
         let viewModel = WMFAppOnboardingViewModel(
             languages: preferredLanguageItems(),
             interestsViewModel: interestsViewModel,
+            feedPreferenceViewModel: feedPreferenceViewModel,
             didTapLearnMoreAboutWikipedia: { [weak self] in
                 self?.presentWebView(urlString: CommonStrings.aboutWikipediaURLString)
             },
@@ -96,6 +98,10 @@ final class AppOnboardingCoordinator: NSObject {
     private func finish() {
         if viewModel?.interestsViewModel.hasChanges == true {
             NotificationCenter.default.post(name: WMFNSNotification.forYouInterestsDidChange, object: nil)
+        }
+        // The skip path resets the selection to the default before completion
+        if let seeFirst = viewModel?.feedPreferenceViewModel.selection {
+            WMFHomeDataController.shared.setSeeFirstContent(seeFirst)
         }
         hostingController?.dismiss(animated: true) { [weak self] in
             self?.completion()
