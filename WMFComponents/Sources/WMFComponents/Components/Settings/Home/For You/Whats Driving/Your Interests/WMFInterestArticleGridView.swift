@@ -93,9 +93,9 @@ private struct WMFInterestArticleCardView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(uiColor: theme.paperBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color(uiColor: WMFColor.gray200), lineWidth: 1)
         )
         .overlay(alignment: .bottomTrailing) {

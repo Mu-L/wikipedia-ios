@@ -145,9 +145,9 @@ private struct WMFAppOnboardingPreviewCardView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color(uiColor: theme.paperBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 16)
                 .strokeBorder(Color(uiColor: WMFColor.gray200), lineWidth: 1)
         )
         .onAppear {
