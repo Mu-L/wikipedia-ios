@@ -14,10 +14,13 @@ struct WMFAppOnboardingViewModelTests {
     private func makeViewModel(languages: [WMFAppOnboardingViewModel.LanguageItem] = [],
                                completionBox: CompletionBox = CompletionBox()) -> WMFAppOnboardingViewModel {
         let project = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
-        let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(dataController: WMFHomeDataController(userDefaultsStore: WMFMockKeyValueStore()), project: project)
+        let dataController = WMFHomeDataController(userDefaultsStore: WMFMockKeyValueStore())
+        let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(dataController: dataController, project: project)
+        let feedPreferenceViewModel = WMFAppOnboardingFeedPreferenceViewModel(dataController: dataController, project: project)
         return WMFAppOnboardingViewModel(
             languages: languages,
             interestsViewModel: interestsViewModel,
+            feedPreferenceViewModel: feedPreferenceViewModel,
             didTapLearnMoreAboutWikipedia: {},
             didTapPrivacyPolicy: {},
             didTapTermsOfUse: {},
@@ -29,7 +32,7 @@ struct WMFAppOnboardingViewModelTests {
     @Test
     func stepsAreInExpectedOrder() {
         let viewModel = makeViewModel()
-        #expect(viewModel.steps == [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests])
+        #expect(viewModel.steps == [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference])
         #expect(viewModel.currentStep == .intro)
     }
 
@@ -44,6 +47,8 @@ struct WMFAppOnboardingViewModelTests {
         #expect(viewModel.currentStep == .personalizationIntro)
         viewModel.advance()
         #expect(viewModel.currentStep == .interests)
+        viewModel.advance()
+        #expect(viewModel.currentStep == .feedPreference)
     }
 
     @Test
@@ -56,6 +61,14 @@ struct WMFAppOnboardingViewModelTests {
         #expect(box.completed == false)
         viewModel.advance()
         #expect(box.completed == true)
+    }
+
+    @Test
+    func skipResetsFeedPreferenceToDefault() {
+        let viewModel = makeViewModel()
+        viewModel.feedPreferenceViewModel.select(.personalized)
+        viewModel.skip()
+        #expect(viewModel.feedPreferenceViewModel.selection == .community)
     }
 
     @Test
@@ -79,13 +92,15 @@ struct WMFAppOnboardingViewModelTests {
         #expect(viewModel.showsSkipAndDots == true) // personalizationIntro
         viewModel.advance()
         #expect(viewModel.showsSkipAndDots == true) // interests
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == true) // feedPreference
     }
 
     @Test
     func dotIndexTracksPersonalizationSteps() {
         let viewModel = makeViewModel()
         #expect(viewModel.currentDotIndex == nil) // intro
-        #expect(viewModel.personalizationSteps.count == 2)
+        #expect(viewModel.personalizationSteps.count == 3)
 
         viewModel.advance() // dataPrivacy
         viewModel.advance() // languages
@@ -93,6 +108,8 @@ struct WMFAppOnboardingViewModelTests {
         #expect(viewModel.currentDotIndex == 0)
         viewModel.advance() // interests
         #expect(viewModel.currentDotIndex == 1)
+        viewModel.advance() // feedPreference
+        #expect(viewModel.currentDotIndex == 2)
     }
 
     @Test

@@ -1,0 +1,165 @@
+import SwiftUI
+import WMFData
+
+struct WMFAppOnboardingFeedPreferenceView: View {
+
+    @ObservedObject var viewModel: WMFAppOnboardingFeedPreferenceViewModel
+    let theme: WMFTheme
+
+    private static let cardWidth: CGFloat = 170
+    private static let cardHeight: CGFloat = 220
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(viewModel.title)
+                    .font(Font(WMFFont.for(.boldTitle3)))
+                    .foregroundStyle(Color(uiColor: theme.text))
+                    .padding(.horizontal, 16)
+                    .padding(.top, 24)
+
+                optionRow(
+                    title: viewModel.communityOptionTitle,
+                    option: .community,
+                    isEnabled: true,
+                    accessibilityIdentifier: AccessibilityIdentifiers.Onboarding.communityOptionButton
+                )
+                cardsRow(cards: viewModel.communityCards)
+
+                optionRow(
+                    title: viewModel.personalizedOptionTitle,
+                    option: .personalized,
+                    isEnabled: viewModel.isPersonalizedAvailable,
+                    accessibilityIdentifier: AccessibilityIdentifiers.Onboarding.personalizedOptionButton
+                )
+                .padding(.top, 16)
+
+                if viewModel.isPersonalizedAvailable {
+                    cardsRow(cards: viewModel.personalizedCards)
+                } else {
+                    Text(viewModel.personalizedDisabledExplanation)
+                        .font(Font(WMFFont.for(.callout)))
+                        .foregroundStyle(Color(uiColor: theme.secondaryText))
+                        .padding(.horizontal, 16)
+                }
+            }
+            .padding(.bottom, WMFAppOnboardingView.toolbarContentInset)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(AccessibilityIdentifiers.Onboarding.feedPreferenceView)
+    }
+
+    private func optionRow(title: String, option: WMFHomeFeedSeeFirst, isEnabled: Bool, accessibilityIdentifier: String) -> some View {
+        let isSelected = viewModel.selection == option
+        return HStack(spacing: 12) {
+            radioIcon(isSelected: isSelected, isEnabled: isEnabled)
+            Text(title)
+                .font(Font(WMFFont.for(.boldCallout)))
+                .foregroundStyle(Color(uiColor: isEnabled ? theme.text : theme.secondaryText))
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            guard isEnabled else { return }
+            withAnimation {
+                viewModel.select(option)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .accessibilityIdentifier(accessibilityIdentifier)
+    }
+
+    @ViewBuilder
+    private func radioIcon(isSelected: Bool, isEnabled: Bool) -> some View {
+        if isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmarkCircleFill, font: .title3) {
+            Image(uiImage: checkmark)
+                .foregroundStyle(Color(uiColor: theme.link))
+        } else {
+            Circle()
+                .strokeBorder(Color(uiColor: isEnabled ? theme.secondaryText : theme.border), lineWidth: 2)
+                .frame(width: 24, height: 24)
+        }
+    }
+
+    private func cardsRow(cards: [WMFAppOnboardingPreviewCardViewModel]) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: 12) {
+                ForEach(cards) { card in
+                    WMFAppOnboardingPreviewCardView(viewModel: card, theme: theme)
+                        .frame(width: Self.cardWidth, height: Self.cardHeight)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        // Preview only — cards are not tappable
+        .allowsHitTesting(false)
+    }
+}
+
+/// Non-interactive sample article card: image (when available), optional topic pill, title, description.
+/// Fixed height; without an image the content pushes to the top and the pill moves above the title.
+private struct WMFAppOnboardingPreviewCardView: View {
+
+    @ObservedObject var viewModel: WMFAppOnboardingPreviewCardViewModel
+    let theme: WMFTheme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if let uiImage = viewModel.uiImage {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
+                    .clipped()
+                    .overlay(alignment: .bottomLeading) {
+                        if let pill = viewModel.topicPill {
+                            topicPillView(pill)
+                                .padding(8)
+                        }
+                    }
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                if viewModel.uiImage == nil, let pill = viewModel.topicPill {
+                    topicPillView(pill)
+                }
+                Text(viewModel.title)
+                    .font(Font(WMFFont.for(.semiboldHeadline)))
+                    .foregroundStyle(Color(uiColor: theme.text))
+                    .lineLimit(2)
+                if let description = viewModel.description {
+                    Text(description)
+                        .font(Font(WMFFont.for(.callout)))
+                        .foregroundStyle(Color(uiColor: theme.secondaryText))
+                }
+            }
+            .padding(8)
+
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(Color(uiColor: theme.paperBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .strokeBorder(Color(uiColor: WMFColor.gray200), lineWidth: 1)
+        )
+        .onAppear {
+            viewModel.loadIfNeeded()
+        }
+    }
+
+    private func topicPillView(_ text: String) -> some View {
+        Text(text)
+            .font(Font(WMFFont.for(.mediumFootnote)))
+            .foregroundStyle(Color(uiColor: theme.paperBackground))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(
+                Capsule()
+                    .fill(Color(uiColor: theme.link))
+            )
+    }
+}

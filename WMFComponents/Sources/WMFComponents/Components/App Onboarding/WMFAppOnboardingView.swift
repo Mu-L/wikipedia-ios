@@ -50,6 +50,11 @@ public struct WMFAppOnboardingView: View {
             }
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier(AccessibilityIdentifiers.Interests.view)
+        case .feedPreference:
+            WMFAppOnboardingFeedPreferenceView(viewModel: viewModel.feedPreferenceViewModel, theme: theme)
+                .onAppear {
+                    viewModel.feedPreferenceViewModel.loadIfNeeded()
+                }
         }
     }
 }

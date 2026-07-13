@@ -11,9 +11,15 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
         case languages
         case personalizationIntro
         case interests
+        case feedPreference
 
         var isPersonalization: Bool {
-            return self == .personalizationIntro || self == .interests
+            switch self {
+            case .personalizationIntro, .interests, .feedPreference:
+                return true
+            case .intro, .dataPrivacy, .languages:
+                return false
+            }
         }
     }
 
@@ -58,12 +64,13 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
 
     /// Onboarding steps in presentation order. Future steps can be appended here; personalization
     /// sub-steps automatically join the page dots.
-    let steps: [Step] = [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests]
+    let steps: [Step] = [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference]
 
     @Published public private(set) var currentStepIndex: Int = 0
     @Published public private(set) var languages: [LanguageItem]
 
     public let interestsViewModel: WMFHomeFeedInterestsSettingsViewModel
+    public let feedPreferenceViewModel: WMFAppOnboardingFeedPreferenceViewModel
 
     // MARK: - App-side actions
 
@@ -75,6 +82,7 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
 
     public init(languages: [LanguageItem],
                 interestsViewModel: WMFHomeFeedInterestsSettingsViewModel,
+                feedPreferenceViewModel: WMFAppOnboardingFeedPreferenceViewModel,
                 didTapLearnMoreAboutWikipedia: @escaping () -> Void,
                 didTapPrivacyPolicy: @escaping () -> Void,
                 didTapTermsOfUse: @escaping () -> Void,
@@ -82,6 +90,7 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
                 onCompletion: @escaping () -> Void) {
         self.languages = languages
         self.interestsViewModel = interestsViewModel
+        self.feedPreferenceViewModel = feedPreferenceViewModel
         self.didTapLearnMoreAboutWikipedia = didTapLearnMoreAboutWikipedia
         self.didTapPrivacyPolicy = didTapPrivacyPolicy
         self.didTapTermsOfUse = didTapTermsOfUse
@@ -114,8 +123,10 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
         }
     }
 
-    /// Skips the remaining steps and completes onboarding.
+    /// Skips the remaining steps and completes onboarding. Skipping applies the default
+    /// feed preference regardless of any selection made on the feed preference step.
     public func skip() {
+        feedPreferenceViewModel.resetSelectionToDefault()
         onCompletion()
     }
 
