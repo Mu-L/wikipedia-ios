@@ -80,7 +80,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                 Button(viewModel.deselectAllTitle) {
                     viewModel.deselectAll()
                 }
-                .font(Font(WMFFont.for(.subheadline)))
+                .font(Font(WMFFont.for(.mediumSubheadline)))
                 .foregroundStyle(Color(uiColor: theme.link))
                 .accessibilityIdentifier(AccessibilityIdentifiers.Interests.deselectAllButton)
             }
