@@ -60,24 +60,26 @@ struct WMFAppOnboardingDataPrivacyView: View {
     private static let termsOfUseSentinelURL = "wmf-app-onboarding://terms-of-use"
 
     var body: some View {
-        VStack(spacing: 0) {
+        GeometryReader { geometry in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // TODO: Placeholder artwork pending final design assets.
-                    WMFAppOnboardingPlaceholderIllustration(symbol: .book, theme: theme, height: 160)
-                        .padding(.top, 60)
-    
+                    WMFGIFImageView("onboarding_data")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+
                     Text(viewModel.dataPrivacyTitle)
                         .font(Font(WMFFont.for(.boldTitle1)))
                         .foregroundStyle(Color(uiColor: theme.text))
-    
+
                     Text(viewModel.dataPrivacyBody)
                         .font(Font(WMFFont.for(.callout)))
                         .foregroundStyle(Color(uiColor: theme.text))
-    
+
                     linksText
                 }
                 .padding(.horizontal, 32)
+                // Center the content block vertically; stays scrollable at large type sizes
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }
         }
         .accessibilityElement(children: .contain)
