@@ -163,6 +163,12 @@
 "app-onboarding-data-privacy-policy-link" = "Tappable privacy policy link text, inserted into a sentence on the Data & Privacy app onboarding screen.";
 "app-onboarding-data-privacy-terms-link" = "Tappable terms of use link text, inserted into a sentence on the Data & Privacy app onboarding screen.";
 "app-onboarding-data-privacy-title" = "Title of the Data & Privacy app onboarding screen.";
+"app-onboarding-feed-preference-community-option" = "Title of the community content option on the feed preference app onboarding screen.";
+"app-onboarding-feed-preference-in-the-news" = "Title of the In the News sample card on the feed preference app onboarding screen.";
+"app-onboarding-feed-preference-personalized-disabled" = "Explanation shown on the feed preference app onboarding screen when the personalized content option is unavailable because the user has no interests and no reading history.";
+"app-onboarding-feed-preference-personalized-option" = "Title of the personalized content option on the feed preference app onboarding screen.";
+"app-onboarding-feed-preference-picture-of-the-day" = "Title of the Picture of the Day sample card on the feed preference app onboarding screen.";
+"app-onboarding-feed-preference-title" = "Title of the feed preference app onboarding screen, where users choose the content their feed opens on.";
 "app-onboarding-intro-body" = "Description on the first app onboarding screen.";
 "app-onboarding-intro-learn-more" = "Title of the link on the first app onboarding screen that opens a web view with more information about Wikipedia.";
 "app-onboarding-intro-title" = "Title of the first app onboarding screen.";
