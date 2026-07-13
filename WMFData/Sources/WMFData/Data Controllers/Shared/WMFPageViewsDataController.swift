@@ -444,47 +444,33 @@ extension WMFPageViewsDataController {
 
         let todayStart = calendar.startOfDay(for: now)
         let removeDateStart = calendar.startOfDay(for: config.removeDate)
-        let startDateStart = calendar.startOfDay(for: config.startDate)
-        let endDateStart = calendar.startOfDay(for: config.endDate)
-        let oneDayInSeconds = 60 * 60 * 24
-        let maxDateToCompleteStreak = calendar.startOfDay(for: endDateStart.addingTimeInterval(TimeInterval((config.streakGoal * oneDayInSeconds))))
 
-        if todayStart >= removeDateStart {
-            return .postChallengeRandomizer
-        }
-
-        if todayStart < startDateStart {
-            sendHeartbeat(elementId: "not_yet_live")
-            return .notLiveYet
-        }
-
-        guard isEnrolled else {
-            if todayStart > endDateStart {
+        // Check if user has already completed the challenge
+        if sharedDefaultsBool(.readingChallengeUserCompleted) {
+            if todayStart >= removeDateStart {
                 return .postChallengeRandomizer
             }
-            sendHeartbeat(elementId: "not_enrolled")
-            return .notEnrolled
+            sendHeartbeat(elementId: "challenge_completed", actionContext: [
+                "streak_count": config.streakGoal,
+                "streak_complete": true
+            ])
+            return .challengeCompleted
         }
 
-        let (streak, hasReadToday, streakStartedAfterEnrollmentCutoff) = try await computeStreak(
+        // Check if streak goal is newly met
+        let (streak, _, _) = try await computeStreak(
             calendar: calendar,
             now: now,
             startDate: config.startDate,
             endDate: config.endDate
         )
-
         let cappedStreak = min(streak, config.streakGoal)
-
-        if sharedDefaultsBool(.readingChallengeUserCompleted) {
-            sendHeartbeat(elementId: "challenge_completed", actionContext: [
-                "streak_count": cappedStreak,
-                "streak_complete": true
-            ])
-            return .challengeCompleted
-        }
 
         if cappedStreak >= config.streakGoal {
             setSharedDefaultsBool(.readingChallengeUserCompleted, value: true)
+            if todayStart >= removeDateStart {
+                return .postChallengeRandomizer
+            }
             sendHeartbeat(elementId: "challenge_completed", actionContext: [
                 "streak_count": cappedStreak,
                 "streak_complete": true
@@ -492,71 +478,10 @@ extension WMFPageViewsDataController {
             return .challengeCompleted
         }
 
-        if todayStart > endDateStart {
-            if streakStartedAfterEnrollmentCutoff {
-                sendHeartbeat(elementId: "challenge_no_streak", actionContext: [
-                    "streak_count": cappedStreak,
-                    "streak_complete": false
-                ])
-                return .challengeConcludedNoStreak
-            }
-
-            if cappedStreak == 0 {
-                let highestStreak = try await computeLongestStreak(calendar: calendar, now: now, startDate: config.startDate)
-                if highestStreak > 1 {
-                    sendHeartbeat(elementId: "challenge_incomplete", actionContext: [
-                        "streak_count": highestStreak,
-                        "streak_complete": false
-                    ])
-                    return .challengeConcludedIncomplete(streak: highestStreak)
-                } else {
-                    sendHeartbeat(elementId: "challenge_no_streak", actionContext: [
-                        "streak_count": 0,
-                        "streak_complete": false
-                    ])
-                    return .challengeConcludedNoStreak
-                }
-            }
-        }
-
-        if todayStart > maxDateToCompleteStreak {
-            if cappedStreak > 1 {
-                sendHeartbeat(elementId: "challenge_incomplete", actionContext: [
-                    "streak_count": cappedStreak,
-                    "streak_complete": false
-                ])
-                return .challengeConcludedIncomplete(streak: cappedStreak)
-            } else {
-                sendHeartbeat(elementId: "challenge_no_streak", actionContext: [
-                    "streak_count": cappedStreak,
-                    "streak_complete": false
-                ])
-                return .challengeConcludedNoStreak
-            }
-        }
-
-        if cappedStreak == 0 {
-            sendHeartbeat(elementId: "enrolled_not_started", actionContext: [
-                "streak_count": 0
-            ])
-            return .enrolledNotStarted
-        }
-
-        if hasReadToday {
-            sendHeartbeat(elementId: "streak_ongoing_read", actionContext: [
-                "streak_count": cappedStreak,
-                "streak_complete": false
-            ])
-            return .streakOngoingRead(streak: cappedStreak)
-        } else {
-            sendHeartbeat(elementId: "streak_ongoing", actionContext: [
-                "streak_count": cappedStreak,
-                "streak_complete": false
-            ])
-            return .streakOngoingNotYetRead(streak: cappedStreak)
-        }
+        // Everyone else
+        return .postChallengeRandomizer
     }
-
+    
     private func computeStreak(
         calendar: Calendar,
         now: Date,

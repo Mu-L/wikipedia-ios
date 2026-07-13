@@ -1,15 +1,7 @@
 import Foundation
 
 public enum ReadingChallengeState: Equatable, Codable, Hashable {
-    case challengeRemoved
-    case notLiveYet
-    case notEnrolled
-    case enrolledNotStarted
-    case streakOngoingRead(streak: Int)
-    case streakOngoingNotYetRead(streak: Int)
     case challengeCompleted
-    case challengeConcludedIncomplete(streak: Int)
-    case challengeConcludedNoStreak
     case postChallengeRandomizer
 }
 

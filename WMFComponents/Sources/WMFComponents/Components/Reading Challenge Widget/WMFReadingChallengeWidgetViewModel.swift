@@ -82,7 +82,7 @@ public final class WMFReadingChallengeWidgetViewModel: ObservableObject {
     public init(
         localizedStrings: LocalizedStrings,
         displaySet: DisplaySet,
-        state: ReadingChallengeState = .notEnrolled
+        state: ReadingChallengeState = .postChallengeRandomizer
     ) {
         self.localizedStrings = localizedStrings
         self.displaySet = displaySet
