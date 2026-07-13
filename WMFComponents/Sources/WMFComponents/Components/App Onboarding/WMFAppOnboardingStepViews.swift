@@ -182,26 +182,28 @@ struct WMFAppOnboardingPersonalizationIntroView: View {
     let theme: WMFTheme
 
     var body: some View {
-        VStack(spacing: 0) {
+        GeometryReader { geometry in
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    // TODO: Placeholder artwork pending final design assets.
-                    WMFAppOnboardingPlaceholderIllustration(symbol: .bookPages, theme: theme, height: 160)
-                        .padding(.top, 100)
-    
+                    WMFGIFImageView("onboarding_puzzle")
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+
                     Text(viewModel.personalizationTitle)
                         .font(Font(WMFFont.for(.boldTitle1)))
                         .foregroundStyle(Color(uiColor: theme.text))
-    
+
                     Text(viewModel.personalizationBody1)
                         .font(Font(WMFFont.for(.callout)))
                         .foregroundStyle(Color(uiColor: theme.text))
-    
+
                     Text(viewModel.personalizationBody2)
                         .font(Font(WMFFont.for(.callout)))
                         .foregroundStyle(Color(uiColor: theme.text))
                 }
                 .padding(.horizontal, 32)
+                // Center the content block vertically; stays scrollable at large type sizes
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
             }
         }
         .accessibilityElement(children: .contain)
