@@ -89,7 +89,7 @@ private extension WMFReadingChallengeWidgetViewModel.DisplaySet {
         let icon = WMFSFSymbolIcon.for(symbol: .flameFill, font: .boldTitle1)
         let button1Title = family == .systemSmall
             ? CommonStrings.randomButton
-            : WMFLocalizedString("reading-challenge-random-article-button", value: "Random article", comment: "Button title on the post-challenge randomizer widget for medium size, linking to a random Wikipedia article.")
+        : CommonStrings.randomArticleButton
         let button1Icon = WMFSFSymbolIcon.for(symbol: .diceFill, font: .semiboldSubheadline)
         let button1URL = URL(string: "wikipedia://random?source=widget_reading_challenge")
 
@@ -189,7 +189,7 @@ struct ReadingChallengeWidget: Widget {
         StaticConfiguration(kind: kind, provider: ReadingChallengeProvider()) { entry in
             ReadingChallengeEntryView(entry: entry)
         }
-        .configurationDisplayName(WMFLocalizedString("reading-challenge-widget-display-name", value: "Random article", comment: "Display name for the random article widget shown in the widget picker."))
+        .configurationDisplayName(CommonStrings.randomArticleButton)
         .supportedFamilies([.systemSmall, .systemMedium])
         .contentMarginsDisabled()
         .containerBackgroundRemovable(false)

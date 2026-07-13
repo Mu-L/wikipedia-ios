@@ -1153,7 +1153,6 @@
 "reading-challenge-widget-announcement-body2" = "Body text for the reading challenge widget announcement sheet.";
 "reading-challenge-widget-announcement-secondary-button" = "Secondary button title for showing widget installation instructions.";
 "reading-challenge-widget-announcement-title2" = "Title for the reading challenge widget announcement sheet.";
-"reading-challenge-widget-display-name" = "Display name for the random article widget shown in the widget picker.";
 "reading-list-add-generic-hint-title" = "Title of the reading list hint that appears after an article is saved.";
 "reading-list-add-hint-title" = "Title of the reading list hint that appears after an article is saved. $1 will be replaced with the saved article title";
 "reading-list-add-saved-button-title" = "Title for button to add saved articles to reading list.";
