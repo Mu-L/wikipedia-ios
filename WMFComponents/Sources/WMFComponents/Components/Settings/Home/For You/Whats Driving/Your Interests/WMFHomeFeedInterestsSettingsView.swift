@@ -146,7 +146,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
     private var topicChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                ForEach(viewModel.topics, id: \.self) { topic in
+                ForEach(viewModel.orderedTopics, id: \.self) { topic in
                     TopicChipView(
                         title: topic.displayName,
                         isSelected: viewModel.selectedTopics.contains(topic),
@@ -159,6 +159,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .animation(.default, value: viewModel.selectedTopics)
         }
     }
 }

@@ -78,6 +78,16 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
         }
     }
 
+    /// Topics as displayed in the chips row: selected topics first (alphabetical by display
+    /// name), followed by the unselected topics in their default order.
+    var orderedTopics: [WMFArticleTopic] {
+        let selected = topics
+            .filter { selectedTopics.contains($0) }
+            .sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
+        let unselected = topics.filter { !selectedTopics.contains($0) }
+        return selected + unselected
+    }
+
     var selectedCount: Int {
         return selectedTopics.count + selectedArticleCount
     }

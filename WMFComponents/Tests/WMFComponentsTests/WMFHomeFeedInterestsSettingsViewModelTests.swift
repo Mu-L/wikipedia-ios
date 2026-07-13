@@ -104,6 +104,37 @@ struct WMFHomeFeedInterestsSettingsViewModelTests {
         #expect(b.isSelected == true)
     }
 
+    // MARK: - Topic ordering
+
+    @Test
+    func orderedTopicsMatchDefaultOrderWithoutSelection() {
+        let viewModel = makeViewModel()
+        #expect(viewModel.orderedTopics == viewModel.topics)
+    }
+
+    @Test
+    func orderedTopicsMoveSelectionToFrontAlphabetically() {
+        let viewModel = makeViewModel()
+        viewModel.toggleTopic(.education)
+        #expect(viewModel.orderedTopics.first == .education)
+
+        // A later selection that sorts earlier alphabetically goes in front
+        viewModel.toggleTopic(.architecture)
+        #expect(Array(viewModel.orderedTopics.prefix(2)) == [.architecture, .education])
+
+        // Unselected topics keep their default order after the selected group
+        let unselected = viewModel.orderedTopics.dropFirst(2)
+        #expect(Array(unselected) == viewModel.topics.filter { $0 != .architecture && $0 != .education })
+    }
+
+    @Test
+    func orderedTopicsRestoreDefaultOrderOnDeselection() {
+        let viewModel = makeViewModel()
+        viewModel.toggleTopic(.education)
+        viewModel.toggleTopic(.education)
+        #expect(viewModel.orderedTopics == viewModel.topics)
+    }
+
     // MARK: - Selected count
 
     @Test
