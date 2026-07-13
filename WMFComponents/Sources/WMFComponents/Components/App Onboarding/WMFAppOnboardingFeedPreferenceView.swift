@@ -71,18 +71,24 @@ struct WMFAppOnboardingFeedPreferenceView: View {
         .accessibilityIdentifier(accessibilityIdentifier)
     }
 
+    private static let radioSize: CGFloat = 24
+
     @ViewBuilder
     private func radioIcon(isSelected: Bool, isEnabled: Bool) -> some View {
-        if isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmarkCircleFill, font: .title3) {
+        if isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmarkCircleFill) {
             Image(uiImage: checkmark)
+                .resizable()
+                .scaledToFit()
+                .frame(width: Self.radioSize, height: Self.radioSize)
                 .foregroundStyle(Color(uiColor: theme.link))
         } else {
             Circle()
                 .strokeBorder(Color(uiColor: isEnabled ? theme.secondaryText : theme.border), lineWidth: 2)
-                .frame(width: 24, height: 24)
+                .frame(width: Self.radioSize, height: Self.radioSize)
         }
     }
 
+    // The row scrolls horizontally; the cards themselves are preview-only (no tap handling)
     private func cardsRow(cards: [WMFAppOnboardingPreviewCardViewModel]) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: 12) {
@@ -93,8 +99,6 @@ struct WMFAppOnboardingFeedPreferenceView: View {
             }
             .padding(.horizontal, 16)
         }
-        // Preview only — cards are not tappable
-        .allowsHitTesting(false)
     }
 }
 
