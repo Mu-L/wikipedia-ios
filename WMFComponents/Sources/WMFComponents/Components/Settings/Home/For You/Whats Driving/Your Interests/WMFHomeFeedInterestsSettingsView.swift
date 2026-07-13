@@ -1,5 +1,3 @@
-// TODO: This is temporary UI — topic chips and article grid are placeholders pending final design.
-
 import SwiftUI
 
 public struct WMFHomeFeedInterestsSettingsView: View {
@@ -144,22 +142,34 @@ public struct WMFHomeFeedInterestsSettingsView: View {
     // MARK: - Topic chips
 
     private var topicChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(viewModel.orderedTopics, id: \.self) { topic in
-                    TopicChipView(
-                        title: topic.displayName,
-                        isSelected: viewModel.selectedTopics.contains(topic),
-                        theme: theme
-                    )
-                    .onTapGesture {
-                        viewModel.toggleTopic(topic)
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(viewModel.orderedTopics, id: \.self) { topic in
+                        TopicChipView(
+                            title: topic.displayName,
+                            isSelected: viewModel.selectedTopics.contains(topic),
+                            theme: theme
+                        )
+                        .onTapGesture {
+                            let isSelecting = !viewModel.selectedTopics.contains(topic)
+                            viewModel.toggleTopic(topic)
+                            if isSelecting {
+                                // Selection moves the chip to the front of the row, which can
+                                // land off-screen — follow it after the reorder settles.
+                                Task { @MainActor in
+                                    withAnimation {
+                                        proxy.scrollTo(topic)
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .animation(.default, value: viewModel.selectedTopics)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .animation(.default, value: viewModel.selectedTopics)
         }
     }
 }
