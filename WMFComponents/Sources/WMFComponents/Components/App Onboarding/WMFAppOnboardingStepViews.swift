@@ -2,22 +2,27 @@ import SwiftUI
 
 // MARK: - Intro
 
-/// The first onboarding step. Always rendered with the dark theme, regardless of the app theme.
+/// The first onboarding step. Always rendered with the black theme, regardless of the app theme.
 struct WMFAppOnboardingIntroView: View {
 
     @ObservedObject var viewModel: WMFAppOnboardingViewModel
 
-    private let theme = WMFTheme.dark
+    private let theme = WMFTheme.black
 
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(viewModel.introWordmark)
-                        .font(Font(WMFFont.for(.georgiaTitle3)))
-                        .kerning(4)
-                        .foregroundStyle(Color(uiColor: theme.text))
+                    // Template rendering at the call site: the shared "wikipedia" asset is
+                    // black, and other usages (e.g. Which Came First sharing) rely on that.
+                    Image("wikipedia", bundle: .module)
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 24)
                         .frame(maxWidth: .infinity)
+                        .foregroundStyle(.white)
+                        .accessibilityLabel(viewModel.introWordmark)
                         .padding(.top, 16)
 
                     Text(viewModel.introTitle)
@@ -39,8 +44,12 @@ struct WMFAppOnboardingIntroView: View {
                 .padding(.horizontal, 32)
             }
 
-            // TODO: Placeholder artwork pending final design assets.
-            WMFAppOnboardingPlaceholderIllustration(symbol: .globeAmericas, theme: theme, height: 280)
+            Image("onboarding_intro", bundle: .module)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                // 30pt gap to the toolbar: 8pt toolbar bottom padding + 44pt control height + 30
+                .padding(.bottom, 82)
         }
         .background(Color(uiColor: theme.paperBackground))
         .environment(\.colorScheme, .dark)
@@ -256,29 +265,5 @@ struct WMFAppOnboardingPersonalizationIntroView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AccessibilityIdentifiers.Onboarding.personalizationIntroView)
-    }
-}
-
-// MARK: - Shared placeholder illustration
-
-private struct WMFAppOnboardingPlaceholderIllustration: View {
-
-    let symbol: WMFSFSymbolIcon
-    let theme: WMFTheme
-    let height: CGFloat
-
-    var body: some View {
-        HStack {
-            Spacer()
-            if let image = WMFSFSymbolIcon.for(symbol: symbol, font: .boldTitle1) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: height * 0.5)
-                    .foregroundStyle(Color(uiColor: theme.secondaryText).opacity(0.6))
-            }
-            Spacer()
-        }
-        .frame(height: height)
     }
 }

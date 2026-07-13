@@ -103,6 +103,11 @@ struct WMFAppOnboardingToolbar: View {
         .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: false))
     }
 
+    /// The intro step highlights the next button as white-on-link; other steps keep it neutral.
+    private var isIntroStep: Bool {
+        viewModel.currentStep == .intro
+    }
+
     private var nextButton: some View {
         Button {
             withAnimation {
@@ -112,12 +117,12 @@ struct WMFAppOnboardingToolbar: View {
             Group {
                 if let chevron = WMFSFSymbolIcon.for(symbol: .chevronForward, font: .boldHeadline) {
                     Image(uiImage: chevron)
-                        .foregroundStyle(Color(uiColor: theme.text))
+                        .foregroundStyle(isIntroStep ? Color.white : Color(uiColor: theme.text))
                 }
             }
             .frame(width: Self.controlHeight, height: Self.controlHeight)
         }
-        .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: true))
+        .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: true, tint: isIntroStep ? Color(uiColor: theme.link) : nil))
         .accessibilityLabel(viewModel.nextAccessibilityLabel)
         .accessibilityIdentifier(AccessibilityIdentifiers.Onboarding.nextButton)
     }
@@ -126,17 +131,30 @@ struct WMFAppOnboardingToolbar: View {
 private struct WMFAppOnboardingPillBackground: ViewModifier {
     let theme: WMFTheme
     let isInteractive: Bool
+    var tint: Color?
 
     func body(content: Content) -> some View {
         if #available(iOS 26.0, *) {
             content
-                .glassEffect(isInteractive ? .regular.interactive() : .regular, in: Capsule())
+                .glassEffect(glass, in: Capsule())
         } else {
             content
                 .background(
                     Capsule()
-                        .fill(Color(uiColor: theme.midBackground).opacity(0.9))
+                        .fill(tint ?? Color(uiColor: theme.midBackground).opacity(0.9))
                 )
         }
+    }
+
+    @available(iOS 26.0, *)
+    private var glass: Glass {
+        var glass: Glass = .regular
+        if let tint {
+            glass = glass.tint(tint)
+        }
+        if isInteractive {
+            glass = glass.interactive()
+        }
+        return glass
     }
 }
