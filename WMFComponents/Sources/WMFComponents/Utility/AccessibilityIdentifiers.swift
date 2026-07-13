@@ -113,6 +113,7 @@ public enum AccessibilityIdentifiers {
 
     public enum Interests {
         public static let deselectAllButton = "Interests Deselect All Button"
+        public static let searchCancelButton = "Interests Search Cancel Button"
         public static let searchField = "Interests Search Field"
         public static let searchResultRow = "Interests Search Result Row"
         public static let view = "Interests View"

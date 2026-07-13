@@ -4,6 +4,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
 
     @ObservedObject var viewModel: WMFHomeFeedInterestsSettingsViewModel
     @ObservedObject var appEnvironment = WMFAppEnvironment.current
+    @FocusState private var searchIsFocused: Bool
 
     private let bottomContentInset: CGFloat
 
@@ -89,10 +90,23 @@ public struct WMFHomeFeedInterestsSettingsView: View {
     // MARK: - Search
 
     private var searchBar: some View {
-        searchBarContent
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .modifier(WMFInterestsSearchBarBackground(theme: theme))
+        HStack(spacing: 8) {
+            searchBarContent
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .modifier(WMFInterestsSearchBarBackground(theme: theme))
+
+            if searchIsFocused || viewModel.isSearchActive {
+                Button(viewModel.cancelTitle) {
+                    viewModel.clearSearch()
+                    searchIsFocused = false
+                }
+                .font(Font(WMFFont.for(.body)))
+                .foregroundStyle(Color(uiColor: theme.link))
+                .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchCancelButton)
+            }
+        }
+        .animation(.default, value: searchIsFocused)
     }
 
     private var searchBarContent: some View {
@@ -106,6 +120,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                 .foregroundStyle(Color(uiColor: theme.text))
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
+                .focused($searchIsFocused)
                 .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchField)
 
             if viewModel.isSearchActive, let clearIcon = WMFSFSymbolIcon.for(symbol: .closeCircleFill) {
@@ -128,7 +143,9 @@ public struct WMFHomeFeedInterestsSettingsView: View {
             } else {
                 ForEach(viewModel.searchRows) { row in
                     WMFInterestSearchResultRow(row: row, theme: theme) {
-                        viewModel.addSearchResult(row.result)
+                        if viewModel.addSearchResult(row.result) {
+                            searchIsFocused = false
+                        }
                     }
                     Divider()
                         .overlay(Color(uiColor: theme.border))
