@@ -49,7 +49,17 @@ extension WMFAppViewController {
             return false
         }
 
-        let linkCoordinator = LinkCoordinator(navigationController: navigationController, url: linkURL, dataStore: dataStore, theme: theme, articleSource: .external_link, tabConfig: .appendArticleAndAssignNewTabAndSetToCurrent)
+        // Use the article source from userInfo if provided (e.g. widget deep links inject .widget),
+        // otherwise default to external_link for generic deep links from browsers etc.
+        let articleSource: ArticleSource
+        if let sourceInt = userActivity.userInfo?[ArticleSourceUserInfoKeys.articleSource] as? Int,
+           let source = ArticleSource(rawValue: sourceInt) {
+            articleSource = source
+        } else {
+            articleSource = .external_link
+        }
+
+        let linkCoordinator = LinkCoordinator(navigationController: navigationController, url: linkURL, dataStore: dataStore, theme: theme, articleSource: articleSource, tabConfig: .appendArticleAndAssignNewTabAndSetToCurrent)
         return linkCoordinator.start()
     }
 

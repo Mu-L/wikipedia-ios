@@ -184,7 +184,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         // Try to derive an NSUserActivity for the URL and route accordingly.
-        if let activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) {
+        if var activity = NSUserActivity.wmf_activity(forWikipediaScheme: firstURL) ?? NSUserActivity.wmf_activity(for: firstURL) {
+            // Propagate widget article source into the activity userInfo so article-view
+            // instrumentation (ios_article_link_interaction) can record source = 29 (widget).
+            if let openSource = self.lastOpenSource, openSource.hasPrefix("widget_") {
+                var userInfo = activity.userInfo ?? [:]
+                userInfo[ArticleSourceUserInfoKeys.articleSource] = ArticleSource.widget.rawValue
+                activity.userInfo = userInfo
+            }
             appViewController.showSplashView()
             _ = appViewController.processUserActivity(activity, animated: false) { [weak self] in
                 
