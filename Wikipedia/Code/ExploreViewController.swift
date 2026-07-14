@@ -203,6 +203,7 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
         stopMonitoringReachability()
         isGranularUpdatingEnabled = false
         resetNavBarAppearance()
+        hasLoggedSuggestedEditsCardImpression = false
     }
 
     open override func refresh() {
@@ -346,6 +347,8 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
 
     // MARK: - Event logging
 
+    private var hasLoggedSuggestedEditsCardImpression: Bool = false
+
     private func logFeedImpressionAfterDelay() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(logFeedImpression), object: nil)
         perform(#selector(logFeedImpression), with: self, afterDelay: 3)
@@ -364,6 +367,11 @@ class ExploreViewController: ColumnarCollectionViewController, ExploreCardViewCo
             let isUnobstructed = visibleRect.contains(itemCenter)
             guard isUnobstructed else {
                 continue
+            }
+
+            if group.contentGroupKind == .suggestedEdits, !hasLoggedSuggestedEditsCardImpression {
+                hasLoggedSuggestedEditsCardImpression = true
+                ImageRecommendationsFunnel.shared.logExploreCardDidAppear()
             }
         }
     }
