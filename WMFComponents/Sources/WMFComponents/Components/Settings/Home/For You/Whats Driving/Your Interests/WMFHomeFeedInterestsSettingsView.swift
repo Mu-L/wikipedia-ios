@@ -292,7 +292,7 @@ private struct TopicChipView: View {
         .padding(.vertical, 7)
         .background(
             Capsule()
-                .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.tertiaryBackground))
+                .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.baseBackground))
         )
     }
 }
