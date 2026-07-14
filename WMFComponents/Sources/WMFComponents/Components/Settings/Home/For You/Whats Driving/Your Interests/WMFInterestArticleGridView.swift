@@ -92,7 +92,7 @@ private struct WMFInterestArticleCardView: View {
             }
             .padding(8)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(viewModel.isSelected ? Color(uiColor: WMFColor.blue100) : Color.clear)
+            .background(viewModel.isSelected ? Color(uiColor: theme.addition) : Color.clear)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(uiColor: theme.paperBackground))
@@ -105,11 +105,6 @@ private struct WMFInterestArticleCardView: View {
             if viewModel.isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmark, font: .subheadline) {
                 Image(uiImage: checkmark)
                     .foregroundStyle(Color(uiColor: theme.link))
-                    .padding(5)
-                    .background(
-                        Circle()
-                            .fill(Color(uiColor: WMFColor.blue100))
-                    )
                     .padding(8)
             }
         }

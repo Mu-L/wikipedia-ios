@@ -19,6 +19,7 @@ public struct WMFTheme: Equatable {
     public let paperBackground: UIColor
     public let midBackground: UIColor
     public let tertiaryBackground: UIColor
+    public let addition: UIColor
     public let baseBackground: UIColor
     public let popoverBackground: UIColor
     public let icon: UIColor
@@ -77,6 +78,7 @@ public struct WMFTheme: Equatable {
         paperBackground: WMFColor.white,
         midBackground: WMFColor.gray100,
         tertiaryBackground: WMFColor.fillTertiary,
+        addition: WMFColor.blue300alpha15,
         baseBackground: WMFColor.gray200,
         popoverBackground: WMFColor.white,
         icon: WMFColor.gray300,
@@ -128,6 +130,7 @@ public struct WMFTheme: Equatable {
         paperBackground: WMFColor.beige100,
         midBackground: WMFColor.beige300,
         tertiaryBackground: WMFColor.fillTertiary,// TODO: get correct color
+        addition: WMFColor.blue300alpha15,
         baseBackground: WMFColor.beige400,
         popoverBackground: WMFColor.beige100,
         icon: WMFColor.taupe600,
@@ -179,6 +182,7 @@ public struct WMFTheme: Equatable {
         paperBackground: WMFColor.gray675,
         midBackground: WMFColor.gray700,
         tertiaryBackground: WMFColor.fillTertiary, // TODO: get correct color
+        addition: WMFColor.blue600alpha30,
         baseBackground: WMFColor.gray800,
         popoverBackground: WMFColor.gray800,
         icon: WMFColor.gray300,
@@ -230,6 +234,7 @@ public struct WMFTheme: Equatable {
         paperBackground: WMFColor.black,
         midBackground: WMFColor.gray700,
         tertiaryBackground: WMFColor.fillTertiary, // TODO: get correct color
+        addition: WMFColor.blue600alpha30,
         baseBackground: WMFColor.gray800,
         popoverBackground: WMFColor.gray700,
         icon: WMFColor.gray300,
