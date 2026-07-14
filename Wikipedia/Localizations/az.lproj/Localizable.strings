@@ -1136,9 +1136,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "Oxumaq vaxtıdır bəlkə?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "Gün keçməmişdən əvvəl... hələ bir şey öyrənməyin vaxtıdır.";
 "reading-challenge-random-button" = "Təsadüfi";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1 gün}}";
 "reading-challenge-streak-no-days" = "25 gündən $1";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|25 gündən $1}}";
 "reading-challenge-subtitle" = "25 günlük oxuma yarışması";
 "reading-challenge-widget-announcement-body2" = "Körpə qlobus ilə seriyanızı izləmək üçün Əsas səhifədən Oxuma Yarışması vidcetini əlavə etməlisiniz.";
 "reading-challenge-widget-announcement-secondary-button" = "Necə edildiyini göstər";

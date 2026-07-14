@@ -1172,9 +1172,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "조용한 독서 시간은 어떠한가요?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "하루가 저물기 전에...아직 배울 시간이 있습니다.";
 "reading-challenge-random-button" = "임의 문서";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1일}}";
 "reading-challenge-streak-no-days" = "$1일 / 25일";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1일 / 25일}}";
 "reading-challenge-subtitle" = "25일 읽기 도전";
 "reading-challenge-widget-announcement-body2" = "베이비 글로브를 통해 연속 기록을 추적하기 위해서는 홈 화면에 읽기 도전 위젯을 추가해야 합니다.";
 "reading-challenge-widget-announcement-secondary-button" = "방법 보기";

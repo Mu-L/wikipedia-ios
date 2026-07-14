@@ -1195,9 +1195,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "Envie d'un moment de lecture au calme ?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "Avant que la journée ne s'achève…\nIl est encore temps d'apprendre quelque chose.";
 "reading-challenge-random-button" = "Au hasard";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1 jour|$1 jours}}";
 "reading-challenge-streak-no-days" = "$1 sur 25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1 jours sur 25}}";
 "reading-challenge-subtitle" = "Défi de lecture de 25 jours";
 "reading-challenge-widget-announcement-body2" = "Pour suivre votre série de progression quodienne avec Baby Globe, vous devez ajouter le widget Défi de lecture depuis votre écran d'accueil.";
 "reading-challenge-widget-announcement-secondary-button" = "Montre-moi comment faire";
