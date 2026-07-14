@@ -69,10 +69,15 @@ private struct WMFInterestArticleCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let uiImage = viewModel.uiImage {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100)
+                // The container drives layout; scaledToFill images would otherwise report
+                // their own width and inflate the card beyond its column width
+                Color.clear
+                    .frame(height: 100)
+                    .overlay(
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    )
                     .clipped()
                     .contentShape(Rectangle())
             }
