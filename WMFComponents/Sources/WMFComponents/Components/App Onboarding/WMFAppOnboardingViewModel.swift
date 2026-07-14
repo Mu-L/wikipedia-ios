@@ -116,6 +116,12 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
 
     /// Advances to the next step, or completes onboarding when on the last step.
     public func advance() {
+        // Interests are final once the user leaves the interests step — start fetching the
+        // feed preference previews now for a head start over the step's onAppear.
+        if currentStep == .interests {
+            feedPreferenceViewModel.loadIfNeeded()
+        }
+
         if currentStepIndex < steps.count - 1 {
             currentStepIndex += 1
         } else {

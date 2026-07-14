@@ -28,6 +28,12 @@ final class AppOnboardingCoordinator: NSObject {
         // Topics and articles derive from the app's primary language, not any feed-selected language
         let language = preferredWMFLanguages().first ?? WMFDataEnvironment.current.primaryAppLanguage ?? WMFLanguage(languageCode: "en", languageVariantCode: nil)
         let project = WMFProject.wikipedia(language)
+
+        // Warm the day cache so the feed preference step's community previews (and the Home
+        // feed itself) are ready by the time the user gets there. Interests-independent.
+        Task {
+            try? await WMFHomeDataController.shared.fetchCommunity(project: project)
+        }
         let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(project: project, searchLanguages: preferredWMFLanguages())
         let feedPreferenceViewModel = WMFAppOnboardingFeedPreferenceViewModel(project: project)
 

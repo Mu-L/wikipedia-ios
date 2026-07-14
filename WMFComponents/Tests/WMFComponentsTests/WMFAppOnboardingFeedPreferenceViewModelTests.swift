@@ -58,6 +58,28 @@ struct WMFAppOnboardingFeedPreferenceViewModelTests {
         #expect(viewModel.selection == .community)
     }
 
+    @Test
+    func personalizedIsNotSelectableWhileLoading() {
+        let viewModel = makeViewModel()
+        viewModel.isPersonalizedLoading = true
+        viewModel.select(.personalized)
+        #expect(viewModel.selection == .community)
+
+        viewModel.isPersonalizedLoading = false
+        viewModel.select(.personalized)
+        #expect(viewModel.selection == .personalized)
+    }
+
+    @Test
+    func communityIsAlwaysSelectableWhileLoading() {
+        let viewModel = makeViewModel()
+        viewModel.isPersonalizedLoading = false
+        viewModel.select(.personalized)
+        viewModel.isPersonalizedLoading = true
+        viewModel.select(.community)
+        #expect(viewModel.selection == .community)
+    }
+
     // MARK: - Availability
 
     @Test

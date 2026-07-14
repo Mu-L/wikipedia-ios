@@ -24,7 +24,11 @@ struct WMFAppOnboardingFeedPreferenceView: View {
                     isEnabled: true,
                     accessibilityIdentifier: AccessibilityIdentifiers.Onboarding.communityOptionButton
                 )
-                cardsRow(cards: viewModel.communityCards)
+                if viewModel.isCommunityLoading {
+                    loadingRow
+                } else {
+                    cardsRow(cards: viewModel.communityCards)
+                }
 
                 optionRow(
                     title: viewModel.personalizedOptionTitle,
@@ -34,7 +38,9 @@ struct WMFAppOnboardingFeedPreferenceView: View {
                 )
                 .padding(.top, 16)
 
-                if viewModel.isPersonalizedAvailable {
+                if viewModel.isPersonalizedLoading {
+                    loadingRow
+                } else if viewModel.isPersonalizedAvailable {
                     cardsRow(cards: viewModel.personalizedCards)
                 } else {
                     Text(viewModel.personalizedDisabledExplanation)
@@ -61,7 +67,7 @@ struct WMFAppOnboardingFeedPreferenceView: View {
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
         .onTapGesture {
-            guard isEnabled else { return }
+            // The view model guards the personalized option while its data is loading/unavailable
             withAnimation {
                 viewModel.select(option)
             }
@@ -69,6 +75,16 @@ struct WMFAppOnboardingFeedPreferenceView: View {
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
         .accessibilityIdentifier(accessibilityIdentifier)
+    }
+
+    // Same footprint as a cards row so the layout doesn't jump when content arrives
+    private var loadingRow: some View {
+        HStack {
+            Spacer()
+            ProgressView()
+            Spacer()
+        }
+        .frame(height: Self.cardHeight)
     }
 
     private static let radioSize: CGFloat = 24
@@ -151,7 +167,7 @@ private struct WMFAppOnboardingPreviewCardView: View {
                 .strokeBorder(Color(uiColor: WMFColor.gray200), lineWidth: 1)
         )
         .onAppear {
-            viewModel.loadIfNeeded()
+            viewModel.loadImageIfNeeded()
         }
     }
 
