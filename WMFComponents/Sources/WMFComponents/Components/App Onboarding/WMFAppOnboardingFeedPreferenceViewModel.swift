@@ -67,6 +67,17 @@ public final class WMFAppOnboardingFeedPreferenceViewModel: ObservableObject {
         }
     }
 
+    /// Warms the feed the user chose, so the Home feed renders immediately after onboarding.
+    /// Both fetches are day-cached (and prefetched earlier in the flow), so this is usually fast.
+    func loadSelectedFeed() async {
+        switch selection {
+        case .community:
+            _ = try? await dataController.fetchCommunity(project: project)
+        case .personalized:
+            _ = try? await dataController.fetchForYou(project: project)
+        }
+    }
+
     public func loadIfNeeded() {
         guard !hasLoaded else { return }
         hasLoaded = true

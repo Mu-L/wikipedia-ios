@@ -32,7 +32,7 @@ struct WMFAppOnboardingViewModelTests {
     @Test
     func stepsAreInExpectedOrder() {
         let viewModel = makeViewModel()
-        #expect(viewModel.steps == [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference])
+        #expect(viewModel.steps == [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference, .loading])
         #expect(viewModel.currentStep == .intro)
     }
 
@@ -49,6 +49,8 @@ struct WMFAppOnboardingViewModelTests {
         #expect(viewModel.currentStep == .interests)
         viewModel.advance()
         #expect(viewModel.currentStep == .feedPreference)
+        viewModel.advance()
+        #expect(viewModel.currentStep == .loading)
     }
 
     @Test
@@ -81,6 +83,15 @@ struct WMFAppOnboardingViewModelTests {
     }
 
     @Test
+    func loadingStepCompletesAfterFeedLoadAndMinimumDisplay() async throws {
+        let box = CompletionBox()
+        let viewModel = makeViewModel(completionBox: box)
+        viewModel.completeAfterLoadingFeed(minimumDisplay: 0, maximumWait: 0)
+        try await Task.sleep(nanoseconds: 500_000_000)
+        #expect(box.completed == true)
+    }
+
+    @Test
     func skipAndDotsOnlyShowOnPersonalizationSteps() {
         let viewModel = makeViewModel()
         #expect(viewModel.showsSkipAndDots == false) // intro
@@ -94,6 +105,19 @@ struct WMFAppOnboardingViewModelTests {
         #expect(viewModel.showsSkipAndDots == true) // interests
         viewModel.advance()
         #expect(viewModel.showsSkipAndDots == true) // feedPreference
+        viewModel.advance()
+        #expect(viewModel.showsSkipAndDots == false) // loading
+    }
+
+    @Test
+    func toolbarHiddenOnlyOnLoadingStep() {
+        let viewModel = makeViewModel()
+        for _ in 0..<(viewModel.steps.count - 1) {
+            #expect(viewModel.showsToolbar == true)
+            viewModel.advance()
+        }
+        #expect(viewModel.currentStep == .loading)
+        #expect(viewModel.showsToolbar == false)
     }
 
     @Test

@@ -107,6 +107,7 @@ public enum AccessibilityIdentifiers {
         public static let introView = "App Onboarding Intro View"
         public static let languagesView = "App Onboarding Languages View"
         public static let learnMoreLink = "App Onboarding Learn More Link"
+        public static let loadingView = "App Onboarding Loading View"
         public static let nextButton = "App Onboarding Next Button"
         public static let personalizationIntroView = "App Onboarding Personalization Intro View"
         public static let personalizedOptionButton = "App Onboarding Personalized Option Button"

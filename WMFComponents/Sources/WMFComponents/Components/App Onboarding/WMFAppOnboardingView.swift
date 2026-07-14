@@ -27,7 +27,9 @@ public struct WMFAppOnboardingView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .transition(.opacity)
 
-            WMFAppOnboardingToolbar(viewModel: viewModel, theme: theme)
+            if viewModel.showsToolbar {
+                WMFAppOnboardingToolbar(viewModel: viewModel, theme: theme)
+            }
         }
         .background(Color(uiColor: theme.paperBackground).ignoresSafeArea())
         .environment(\.colorScheme, colorScheme)
@@ -55,6 +57,8 @@ public struct WMFAppOnboardingView: View {
                 .onAppear {
                     viewModel.feedPreferenceViewModel.loadIfNeeded()
                 }
+        case .loading:
+            WMFAppOnboardingLoadingView(viewModel: viewModel, theme: theme)
         }
     }
 }

@@ -12,12 +12,13 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
         case personalizationIntro
         case interests
         case feedPreference
+        case loading
 
         var isPersonalization: Bool {
             switch self {
             case .personalizationIntro, .interests, .feedPreference:
                 return true
-            case .intro, .dataPrivacy, .languages:
+            case .intro, .dataPrivacy, .languages, .loading:
                 return false
             }
         }
@@ -57,6 +58,8 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
     let personalizationBody1 = WMFLocalizedString("app-onboarding-personalization-body-1", value: "Select topics that interest you and we will personalize your feed.", comment: "First description line on the personalization intro app onboarding screen.")
     let personalizationBody2 = WMFLocalizedString("app-onboarding-personalization-body-2", value: "We collect minimal data that is anonymized.", comment: "Second description line on the personalization intro app onboarding screen.")
 
+    let loadingTitle = WMFLocalizedString("app-onboarding-loading-title", value: "Let’s build your feed…", comment: "Title shown on the final app onboarding screen while the user's feed is loading.")
+
     let skipTitle = CommonStrings.skipTitle
     let nextAccessibilityLabel = CommonStrings.nextTitle
 
@@ -64,7 +67,10 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
 
     /// Onboarding steps in presentation order. Future steps can be appended here; personalization
     /// sub-steps automatically join the page dots.
-    let steps: [Step] = [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference]
+    let steps: [Step] = [.intro, .dataPrivacy, .languages, .personalizationIntro, .interests, .feedPreference, .loading]
+
+    /// The Lottie loading step has no toolbar (no Skip/dots/chevron) and auto-completes.
+    let loadingAnimationName = "onboarding-loading"
 
     @Published public private(set) var currentStepIndex: Int = 0
     @Published public private(set) var languages: [LanguageItem]
@@ -106,6 +112,11 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
         return currentStep.isPersonalization
     }
 
+    /// The loading step covers the whole screen with no navigation chrome.
+    var showsToolbar: Bool {
+        return currentStep != .loading
+    }
+
     var personalizationSteps: [Step] {
         return steps.filter { $0.isPersonalization }
     }
@@ -134,6 +145,38 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
     public func skip() {
         feedPreferenceViewModel.resetSelectionToDefault()
         onCompletion()
+    }
+
+    private var loadingTask: Task<Void, Never>?
+
+    /// Drives the loading step: loads the selected feed and waits for the animation to loop at
+    /// least once, then completes onboarding. `minimumDisplay` is the animation's loop duration,
+    /// supplied by the view (which owns the Lottie animation). The feed load is capped by
+    /// `maximumWait` so a slow or hung fetch can never trap the user on the loading screen.
+    func completeAfterLoadingFeed(minimumDisplay: TimeInterval, maximumWait: TimeInterval = 8) {
+        guard loadingTask == nil else { return }
+        loadingTask = Task { [weak self] in
+            guard let self else { return }
+            async let feedLoaded: Void = loadFeedBounded(maximumWait: maximumWait)
+            async let minimumElapsed: Void = Self.sleep(minimumDisplay)
+            _ = await (feedLoaded, minimumElapsed)
+            guard !Task.isCancelled else { return }
+            onCompletion()
+        }
+    }
+
+    /// Returns once the feed has loaded or `maximumWait` elapses, whichever comes first.
+    private func loadFeedBounded(maximumWait: TimeInterval) async {
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { [weak self] in await self?.feedPreferenceViewModel.loadSelectedFeed() }
+            group.addTask { await Self.sleep(maximumWait) }
+            await group.next()
+            group.cancelAll()
+        }
+    }
+
+    private static func sleep(_ seconds: TimeInterval) async {
+        try? await Task.sleep(nanoseconds: UInt64(max(0, seconds) * 1_000_000_000))
     }
 
     public func updateLanguages(_ items: [LanguageItem]) {
