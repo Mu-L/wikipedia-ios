@@ -111,5 +111,15 @@ private struct WMFInterestArticleCardView: View {
         .onAppear {
             viewModel.loadIfNeeded()
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(viewModel.isSelected ? [.isButton, .isSelected] : .isButton)
+    }
+
+    private var accessibilityLabel: String {
+        [viewModel.title.wmf_strippingHTMLForAccessibility, viewModel.description]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
     }
 }

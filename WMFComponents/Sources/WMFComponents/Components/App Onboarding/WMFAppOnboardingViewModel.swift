@@ -125,6 +125,13 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
         return personalizationSteps.firstIndex(of: currentStep)
     }
 
+    /// Spoken by VoiceOver in place of the decorative page dots.
+    var pageIndicatorAccessibilityLabel: String? {
+        guard let index = currentDotIndex else { return nil }
+        let format = WMFLocalizedString("app-onboarding-page-indicator", value: "Page %1$d of %2$d", comment: "Accessibility label for the onboarding page indicator dots. %1$d is the current page number, %2$d is the total number of pages.")
+        return String.localizedStringWithFormat(format, index + 1, personalizationSteps.count)
+    }
+
     /// Advances to the next step, or completes onboarding when on the last step.
     public func advance() {
         // Interests are final once the user leaves the interests step — start fetching the

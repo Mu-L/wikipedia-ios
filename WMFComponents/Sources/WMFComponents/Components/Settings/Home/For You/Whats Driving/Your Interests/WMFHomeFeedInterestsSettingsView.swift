@@ -290,7 +290,17 @@ private struct WMFInterestSearchResultRow: View {
         .onAppear {
             card.loadIfNeeded()
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
+        .accessibilityAddTraits(card.isSelected ? [.isButton, .isSelected] : .isButton)
         .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchResultRow)
+    }
+
+    private var accessibilityLabel: String {
+        [card.title.wmf_strippingHTMLForAccessibility, card.description]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: ", ")
     }
 }
 
@@ -319,6 +329,9 @@ private struct TopicChipView: View {
             Capsule()
                 .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.baseBackground))
         )
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 
@@ -338,5 +351,15 @@ private struct LanguageChipView: View {
                 Capsule()
                     .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.baseBackground))
             )
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(title)
+            .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+    }
+}
+
+extension String {
+    /// Strips simple HTML tags so display titles (which may contain markup) read cleanly in VoiceOver.
+    var wmf_strippingHTMLForAccessibility: String {
+        replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
     }
 }

@@ -110,6 +110,8 @@ struct WMFAppOnboardingToolbar: View {
         .padding(.horizontal, 20)
         .frame(height: Self.controlHeight)
         .modifier(WMFAppOnboardingPillBackground(theme: theme, isInteractive: false))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(viewModel.pageIndicatorAccessibilityLabel ?? "")
     }
 
     /// The intro step highlights the next button as white-on-link; other steps keep it neutral.
