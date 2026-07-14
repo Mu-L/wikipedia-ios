@@ -256,6 +256,19 @@ struct WMFHomeFeedInterestsSettingsViewModelTests {
     }
 
     @Test
+    func updateProjectMovesSearchLanguageToNewPrimaryEvenWhenOldRemains() {
+        // Reordering to change the primary keeps both languages available, so the search
+        // language must still follow the new primary.
+        let english = WMFLanguage(languageCode: "en", languageVariantCode: nil)
+        let viewModel = makeViewModel(searchLanguages: [english, spanishLanguage])
+        #expect(viewModel.searchLanguage == english)
+
+        viewModel.updateSearchLanguages([spanishLanguage, english])
+        viewModel.updateProject(.wikipedia(spanishLanguage))
+        #expect(viewModel.searchLanguage == spanishLanguage)
+    }
+
+    @Test
     func updateSearchLanguagesResetsInvalidSelection() {
         let viewModel = makeViewModel(searchLanguages: [WMFLanguage(languageCode: "en", languageVariantCode: nil), spanishLanguage])
         viewModel.selectSearchLanguage(spanishLanguage)

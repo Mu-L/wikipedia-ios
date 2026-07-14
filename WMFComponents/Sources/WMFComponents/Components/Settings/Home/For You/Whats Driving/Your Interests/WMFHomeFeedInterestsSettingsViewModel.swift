@@ -182,10 +182,19 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
     }
 
     /// Called when the user changes their primary app language during onboarding — topic and
-    /// article suggestions refetch for the new language. Selected cards keep their own project.
+    /// article suggestions refetch for the new language, and the search language follows the new
+    /// primary. Selected cards keep their own project.
     public func updateProject(_ newProject: WMFProject) {
         guard newProject != project else { return }
         project = newProject
+
+        // Follow the new primary for the default search language. Reordering to change the
+        // primary keeps the old language in the list, so updateSearchLanguages alone wouldn't
+        // move the selection off it.
+        if case .wikipedia(let language) = newProject {
+            searchLanguage = language
+        }
+
         if selectedTopics.isEmpty {
             fetchRandomArticles()
         } else if let topic = selectedTopics.last {
