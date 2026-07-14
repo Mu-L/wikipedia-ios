@@ -176,6 +176,7 @@
 "app-onboarding-languages-notice" = "We’ve noticed the following languages on your device:";
 "app-onboarding-languages-primary-label" = "Primary";
 "app-onboarding-languages-title" = "Read in more than 300 languages";
+"app-onboarding-loading-title" = "Let’s build your feed…";
 "app-onboarding-personalization-body-1" = "Select topics that interest you and we will personalize your feed.";
 "app-onboarding-personalization-body-2" = "We collect minimal data that is anonymized.";
 "app-onboarding-personalization-title" = "Follow your curiosity";

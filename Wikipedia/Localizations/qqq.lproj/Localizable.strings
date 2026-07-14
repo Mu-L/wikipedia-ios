@@ -176,6 +176,7 @@
 "app-onboarding-languages-notice" = "Text above the detected device languages list on the languages app onboarding screen.";
 "app-onboarding-languages-primary-label" = "Label shown under the user's primary language on the languages app onboarding screen.";
 "app-onboarding-languages-title" = "Title of the languages app onboarding screen.";
+"app-onboarding-loading-title" = "Title shown on the final app onboarding screen while the user's feed is loading.";
 "app-onboarding-personalization-body-1" = "First description line on the personalization intro app onboarding screen.";
 "app-onboarding-personalization-body-2" = "Second description line on the personalization intro app onboarding screen.";
 "app-onboarding-personalization-title" = "Title of the personalization intro app onboarding screen.";
