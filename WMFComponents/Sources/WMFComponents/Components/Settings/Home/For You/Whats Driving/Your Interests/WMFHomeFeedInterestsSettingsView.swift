@@ -27,6 +27,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                     .padding(.top, 12)
 
                 if viewModel.isSearchActive {
+                    languageBar
                     searchResults
                 } else {
                     topicChips
@@ -130,6 +131,30 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                     Image(uiImage: clearIcon)
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                 }
+            }
+        }
+    }
+
+    // Search-view-controller-style language bar: lets the user pick which of their languages to
+    // search within. Only shown when there's more than one language to choose from.
+    @ViewBuilder
+    private var languageBar: some View {
+        if viewModel.searchLanguages.count > 1 {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(viewModel.searchLanguages, id: \.languageCode) { language in
+                        LanguageChipView(
+                            title: language.localizedName,
+                            isSelected: language == viewModel.searchLanguage,
+                            theme: theme
+                        )
+                        .onTapGesture {
+                            viewModel.selectSearchLanguage(language)
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
             }
         }
     }
@@ -294,5 +319,24 @@ private struct TopicChipView: View {
             Capsule()
                 .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.baseBackground))
         )
+    }
+}
+
+/// A search-language chip: mimics the topic chip capsule style but carries no selection icon.
+private struct LanguageChipView: View {
+    let title: String
+    let isSelected: Bool
+    let theme: WMFTheme
+
+    var body: some View {
+        Text(title)
+            .font(Font(WMFFont.for(.subheadline)))
+            .foregroundStyle(isSelected ? Color(uiColor: theme.paperBackground) : Color(uiColor: theme.text))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 7)
+            .background(
+                Capsule()
+                    .fill(isSelected ? Color(uiColor: theme.link) : Color(uiColor: theme.baseBackground))
+            )
     }
 }
