@@ -91,7 +91,7 @@ private extension WMFReadingChallengeWidgetViewModel.DisplaySet {
             ? CommonStrings.randomButton
         : CommonStrings.randomArticleButton
         let button1Icon = WMFSFSymbolIcon.for(symbol: .diceFill, font: .semiboldSubheadline)
-        let button1URL = URL(string: "wikipedia://random?source=widget_reading_challenge")
+let button1URL = URL(string: "wikipedia://random?source=widget_random_article")
 
         let defaultSet = WMFReadingChallengeWidgetViewModel.DisplaySet(
             color: WMFTheme.ReadingChallengeColorSet.pink.primary,
