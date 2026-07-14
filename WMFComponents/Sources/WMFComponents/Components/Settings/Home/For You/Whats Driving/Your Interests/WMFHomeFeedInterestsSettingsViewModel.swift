@@ -39,7 +39,8 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
     @Published public private(set) var searchLanguages: [WMFLanguage]
 
     private let dataController: WMFHomeDataController
-    private let pageInterestDataController: WMFPageInterestDataController?
+    private let injectedPageInterestDataController: WMFPageInterestDataController?
+    private var resolvedPageInterestDataController: WMFPageInterestDataController?
     private let searchDataController: WMFArticleSearchDataController
     private(set) var project: WMFProject
     private var fetchTask: Task<Void, Never>?
@@ -47,13 +48,29 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
 
     private static let maxGridArticles = 25
 
+    /// Resolved lazily: the Core Data store may not be ready when this view model is created
+    /// early in app launch (e.g. the onboarding coordinator builds it up front). Re-attempting
+    /// on each access until it succeeds means selections persist once the store is available,
+    /// rather than being silently dropped by a nil controller captured at init time.
+    private var pageInterestDataController: WMFPageInterestDataController? {
+        if let injectedPageInterestDataController {
+            return injectedPageInterestDataController
+        }
+        if let resolvedPageInterestDataController {
+            return resolvedPageInterestDataController
+        }
+        let controller = try? WMFPageInterestDataController()
+        resolvedPageInterestDataController = controller
+        return controller
+    }
+
     public init(dataController: WMFHomeDataController = WMFHomeDataController.shared,
-                pageInterestDataController: WMFPageInterestDataController? = try? WMFPageInterestDataController(),
+                pageInterestDataController: WMFPageInterestDataController? = nil,
                 searchDataController: WMFArticleSearchDataController = WMFArticleSearchDataController.shared,
                 project: WMFProject,
                 searchLanguages: [WMFLanguage] = []) {
         self.dataController = dataController
-        self.pageInterestDataController = pageInterestDataController
+        self.injectedPageInterestDataController = pageInterestDataController
         self.searchDataController = searchDataController
         self.project = project
 
