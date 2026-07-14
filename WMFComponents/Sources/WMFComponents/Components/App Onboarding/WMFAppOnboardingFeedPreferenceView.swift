@@ -169,7 +169,7 @@ private struct WMFAppOnboardingPreviewCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(Color(uiColor: theme.iconBackground), lineWidth: 1)
+                .strokeBorder(Color(uiColor: theme.newBorder), lineWidth: 1)
         )
         .onAppear {
             viewModel.loadImageIfNeeded()

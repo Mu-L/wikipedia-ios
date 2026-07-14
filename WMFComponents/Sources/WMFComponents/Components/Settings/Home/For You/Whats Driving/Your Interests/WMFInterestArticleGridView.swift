@@ -99,7 +99,7 @@ private struct WMFInterestArticleCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .strokeBorder(Color(uiColor: theme.iconBackground), lineWidth: 1)
+                .strokeBorder(Color(uiColor: theme.newBorder), lineWidth: 1)
         )
         .overlay(alignment: .bottomTrailing) {
             if viewModel.isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmark, font: .subheadline) {

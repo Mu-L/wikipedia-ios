@@ -73,7 +73,7 @@ public struct WMFTheme: Equatable {
         destructive: WMFColor.red600,
         warning: WMFColor.orange600,
         border: WMFColor.gray400,
-        newBorder: WMFColor.gray300,
+        newBorder: WMFColor.gray200,
         paperBackground: WMFColor.white,
         midBackground: WMFColor.gray100,
         addition: WMFColor.blue300alpha15,
