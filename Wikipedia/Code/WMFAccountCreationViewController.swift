@@ -282,10 +282,8 @@ class WMFAccountCreationViewController: WMFScrollViewController, WMFCaptchaViewC
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        var actionContext: [String: String]? = nil
-        if let category {
-           actionContext = ["invoke_source": category.rawValue]
-        }
+
+        let actionContext = category.map { ["invoke_source": $0.rawValue] }
         authInstrument.submitInteraction(action: "impression", actionContext: actionContext)
 
         usernameField.becomeFirstResponder()
