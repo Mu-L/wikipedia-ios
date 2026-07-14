@@ -41,7 +41,7 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
     private let dataController: WMFHomeDataController
     private let pageInterestDataController: WMFPageInterestDataController?
     private let searchDataController: WMFArticleSearchDataController
-    private let project: WMFProject
+    private(set) var project: WMFProject
     private var fetchTask: Task<Void, Never>?
     private var searchTask: Task<Void, Never>?
 
@@ -161,6 +161,18 @@ public final class WMFHomeFeedInterestsSettingsViewModel: ObservableObject {
         searchLanguages = languages
         if !languages.contains(searchLanguage) {
             searchLanguage = languages[0]
+        }
+    }
+
+    /// Called when the user changes their primary app language during onboarding — topic and
+    /// article suggestions refetch for the new language. Selected cards keep their own project.
+    public func updateProject(_ newProject: WMFProject) {
+        guard newProject != project else { return }
+        project = newProject
+        if selectedTopics.isEmpty {
+            fetchRandomArticles()
+        } else if let topic = selectedTopics.last {
+            fetchArticles(for: topic)
         }
     }
 

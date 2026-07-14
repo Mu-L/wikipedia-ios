@@ -9,6 +9,7 @@ import Testing
 struct WMFAppOnboardingFeedPreferenceViewModelTests {
 
     private let project = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
+    private let spanishLanguage = WMFLanguage(languageCode: "es", languageVariantCode: nil)
 
     private func makeViewModel() -> WMFAppOnboardingFeedPreferenceViewModel {
         let dataController = WMFHomeDataController(userDefaultsStore: WMFMockKeyValueStore())
@@ -78,6 +79,14 @@ struct WMFAppOnboardingFeedPreferenceViewModelTests {
         viewModel.isPersonalizedLoading = true
         viewModel.select(.community)
         #expect(viewModel.selection == .community)
+    }
+
+    @Test
+    func updateProjectFollowsPrimaryLanguageChange() {
+        let viewModel = makeViewModel()
+        let spanishProject = WMFProject.wikipedia(spanishLanguage)
+        viewModel.updateProject(spanishProject)
+        #expect(viewModel.project == spanishProject)
     }
 
     // MARK: - Availability

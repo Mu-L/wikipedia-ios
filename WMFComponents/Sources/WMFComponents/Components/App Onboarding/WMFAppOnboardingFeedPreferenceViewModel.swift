@@ -24,7 +24,7 @@ public final class WMFAppOnboardingFeedPreferenceViewModel: ObservableObject {
     @Published var isPersonalizedLoading: Bool = false
 
     private let dataController: WMFHomeDataController
-    private let project: WMFProject
+    private(set) var project: WMFProject
     private var communityTask: Task<Void, Never>?
     private var personalizedTask: Task<Void, Never>?
     private var hasLoaded = false
@@ -50,6 +50,21 @@ public final class WMFAppOnboardingFeedPreferenceViewModel: ObservableObject {
     /// Skipping onboarding applies the default preference regardless of the current selection.
     public func resetSelectionToDefault() {
         selection = .community
+    }
+
+    /// Called when the user changes their primary app language during onboarding. The previews
+    /// normally load after the languages step, but reload defensively if they already did.
+    public func updateProject(_ newProject: WMFProject) {
+        guard newProject != project else { return }
+        project = newProject
+        if hasLoaded {
+            communityTask?.cancel()
+            personalizedTask?.cancel()
+            communityCards = []
+            personalizedCards = []
+            hasLoaded = false
+            loadIfNeeded()
+        }
     }
 
     public func loadIfNeeded() {

@@ -122,6 +122,17 @@ extension AppOnboardingCoordinator: WMFPreferredLanguagesViewControllerDelegate 
         MainActor.assumeIsolated {
             viewModel?.updateLanguages(preferredLanguageItems())
             viewModel?.interestsViewModel.updateSearchLanguages(preferredWMFLanguages())
+
+            // Follow the (possibly new) primary language for topic/article suggestions
+            // and feed previews, and re-warm the community cache for it
+            if let primary = preferredWMFLanguages().first {
+                let project = WMFProject.wikipedia(primary)
+                viewModel?.interestsViewModel.updateProject(project)
+                viewModel?.feedPreferenceViewModel.updateProject(project)
+                Task {
+                    try? await WMFHomeDataController.shared.fetchCommunity(project: project)
+                }
+            }
         }
     }
 }

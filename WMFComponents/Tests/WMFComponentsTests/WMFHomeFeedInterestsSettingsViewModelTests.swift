@@ -248,6 +248,14 @@ struct WMFHomeFeedInterestsSettingsViewModelTests {
     }
 
     @Test
+    func updateProjectFollowsPrimaryLanguageChange() {
+        let viewModel = makeViewModel()
+        let spanishProject = WMFProject.wikipedia(spanishLanguage)
+        viewModel.updateProject(spanishProject)
+        #expect(viewModel.project == spanishProject)
+    }
+
+    @Test
     func updateSearchLanguagesResetsInvalidSelection() {
         let viewModel = makeViewModel(searchLanguages: [WMFLanguage(languageCode: "en", languageVariantCode: nil), spanishLanguage])
         viewModel.selectSearchLanguage(spanishLanguage)
