@@ -125,7 +125,7 @@ final class ImageRecommendationsFunnel: NSObject {
     }
     
     func logExploreCardDidTapAddImage() {
-        logEvent(activeInterface: .suggestedEditsDialog, action: .addImageStart, project: project)
+        logEvent(activeInterface: .suggestedEditsDialog, action: .impression, project: project)
     }
     
     func logBottomSheetDidAppear() {
