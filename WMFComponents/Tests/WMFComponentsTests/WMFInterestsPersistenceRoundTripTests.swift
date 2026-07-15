@@ -1,4 +1,5 @@
 import XCTest
+import WMFDataTestSupport
 @testable import WMFComponents
 @testable import WMFData
 @testable import WMFDataMocks
@@ -8,15 +9,22 @@ import XCTest
 @MainActor
 final class WMFInterestsPersistenceRoundTripTests: XCTestCase {
 
+    private let fixture = WMFDataTestFixture()
     private var store: WMFCoreDataStore?
     private let project = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
 
     override func setUp() async throws {
-        let temporaryDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        let store = try await WMFCoreDataStore(appContainerURL: temporaryDirectory)
+        try await super.setUp()
+        await fixture.setUp()
+        let store = try await fixture.makeTemporaryCoreDataStore()
         self.store = store
         WMFDataEnvironment.current.coreDataStore = store
-        try await super.setUp()
+        await fixture.resetWMFDataTestState()
+    }
+
+    override func tearDown() async throws {
+        await fixture.tearDown()
+        try await super.tearDown()
     }
 
     private func waitFor(timeout: TimeInterval = 5, _ condition: @escaping () -> Bool) async throws {
