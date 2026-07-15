@@ -87,7 +87,13 @@ struct WMFAppOnboardingViewModelTests {
         let box = CompletionBox()
         let viewModel = makeViewModel(completionBox: box)
         viewModel.completeAfterLoadingFeed(minimumDisplay: 0, maximumWait: 0)
-        try await Task.sleep(nanoseconds: 500_000_000)
+
+        // Poll rather than a fixed sleep: completion hops through several tasks, which can
+        // exceed a short fixed wait on slow CI runners.
+        let deadline = ContinuousClock.now.advanced(by: .seconds(10))
+        while !box.completed && ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(50))
+        }
         #expect(box.completed == true)
     }
 

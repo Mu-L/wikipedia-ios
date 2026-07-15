@@ -284,8 +284,12 @@ struct WMFHomeFeedInterestsSettingsViewModelTests {
         viewModel.searchTerm = "einstein"
         #expect(viewModel.isSearching == true)
 
-        // Wait out the debounce plus a margin for the mocked fetch
-        try await Task.sleep(for: .milliseconds(600))
+        // Wait out the debounce and the mocked fetch; polling keeps this fast locally while
+        // tolerating slow CI runners (a fixed sleep flaked there).
+        let deadline = ContinuousClock.now.advanced(by: .seconds(10))
+        while (viewModel.searchRows.count != 4 || viewModel.isSearching) && ContinuousClock.now < deadline {
+            try await Task.sleep(for: .milliseconds(50))
+        }
         #expect(viewModel.searchRows.count == 4)
         #expect(viewModel.isSearching == false)
 
