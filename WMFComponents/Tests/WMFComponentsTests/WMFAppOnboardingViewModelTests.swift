@@ -14,7 +14,15 @@ struct WMFAppOnboardingViewModelTests {
     private func makeViewModel(languages: [WMFAppOnboardingViewModel.LanguageItem] = [],
                                completionBox: CompletionBox = CompletionBox()) -> WMFAppOnboardingViewModel {
         let project = WMFProject.wikipedia(WMFLanguage(languageCode: "en", languageVariantCode: nil))
-        let dataController = WMFHomeDataController(userDefaultsStore: WMFMockKeyValueStore())
+        // Fully injected so no test in this suite performs real network I/O (the loading-step
+        // test in particular races a feed fetch against a timeout and flaked on CI when the
+        // fetch was real).
+        let dataController = WMFHomeDataController(
+            feedDataController: WMFMockFeedDataController(response: WMFFeedAPIResponse(todaysFeaturedArticle: nil, mostRead: nil, image: nil, news: nil)),
+            basicService: WMFMockBasicService(),
+            userDefaultsStore: WMFMockKeyValueStore(),
+            onThisDayDataController: WMFOnThisDayDataController(basicService: WMFMockBasicService())
+        )
         let interestsViewModel = WMFHomeFeedInterestsSettingsViewModel(dataController: dataController, project: project)
         let feedPreferenceViewModel = WMFAppOnboardingFeedPreferenceViewModel(dataController: dataController, project: project)
         return WMFAppOnboardingViewModel(
