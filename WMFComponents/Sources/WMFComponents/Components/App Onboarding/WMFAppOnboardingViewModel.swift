@@ -173,12 +173,35 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
     }
 
     /// Returns once the feed has loaded or `maximumWait` elapses, whichever comes first.
+    /// Deliberately not a task group: a group waits for all children before returning, so a
+    /// hung fetch (URLSession doesn't cooperate with task cancellation here) would defeat the
+    /// bound. This races unstructured tasks and lets the loser finish in the background.
     private func loadFeedBounded(maximumWait: TimeInterval) async {
-        await withTaskGroup(of: Void.self) { group in
-            group.addTask { [weak self] in await self?.feedPreferenceViewModel.loadSelectedFeed() }
-            group.addTask { await Self.sleep(maximumWait) }
-            await group.next()
-            group.cancelAll()
+        let resumeState = LoadFeedResumeState()
+        let feedPreferenceViewModel = feedPreferenceViewModel
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            Task {
+                await feedPreferenceViewModel.loadSelectedFeed()
+                resumeState.resumeOnce(continuation)
+            }
+            Task {
+                await Self.sleep(maximumWait)
+                resumeState.resumeOnce(continuation)
+            }
+        }
+    }
+
+    /// Ensures the first-wins race above resumes its continuation exactly once.
+    private final class LoadFeedResumeState: @unchecked Sendable {
+        private let lock = NSLock()
+        private var isResumed = false
+
+        func resumeOnce(_ continuation: CheckedContinuation<Void, Never>) {
+            lock.lock()
+            defer { lock.unlock() }
+            guard !isResumed else { return }
+            isResumed = true
+            continuation.resume()
         }
     }
 
