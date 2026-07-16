@@ -65,8 +65,10 @@ struct WMFAppOnboardingDataPrivacyView: View {
     @ObservedObject var viewModel: WMFAppOnboardingViewModel
     let theme: WMFTheme
 
-    private static let privacyPolicySentinelURL = "wmf-app-onboarding://privacy-policy"
-    private static let termsOfUseSentinelURL = "wmf-app-onboarding://terms-of-use"
+    // Not real destinations: these identify which attributed-string link was tapped in
+    // the OpenURLAction handler. The actual URLs are presented app-side via the coordinator.
+    private static let privacyPolicyLinkToken = "wmf-app-onboarding://privacy-policy"
+    private static let termsOfUseLinkToken = "wmf-app-onboarding://terms-of-use"
 
     var body: some View {
         GeometryReader { geometry in
@@ -100,9 +102,9 @@ struct WMFAppOnboardingDataPrivacyView: View {
             .font(Font(WMFFont.for(.boldCallout)))
             .environment(\.openURL, OpenURLAction { url in
                 switch url.absoluteString {
-                case Self.privacyPolicySentinelURL:
+                case Self.privacyPolicyLinkToken:
                     viewModel.didTapPrivacyPolicy()
-                case Self.termsOfUseSentinelURL:
+                case Self.termsOfUseLinkToken:
                     viewModel.didTapTermsOfUse()
                 default:
                     break
@@ -118,11 +120,11 @@ struct WMFAppOnboardingDataPrivacyView: View {
         attributed.foregroundColor = Color(uiColor: theme.text)
 
         if let privacyRange = attributed.range(of: viewModel.dataPrivacyPolicyLinkText) {
-            attributed[privacyRange].link = URL(string: Self.privacyPolicySentinelURL)
+            attributed[privacyRange].link = URL(string: Self.privacyPolicyLinkToken)
             attributed[privacyRange].foregroundColor = Color(uiColor: theme.link)
         }
         if let termsRange = attributed.range(of: viewModel.dataPrivacyTermsLinkText) {
-            attributed[termsRange].link = URL(string: Self.termsOfUseSentinelURL)
+            attributed[termsRange].link = URL(string: Self.termsOfUseLinkToken)
             attributed[termsRange].foregroundColor = Color(uiColor: theme.link)
         }
         return attributed
