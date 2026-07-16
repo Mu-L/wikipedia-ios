@@ -38,7 +38,9 @@ public final class WMFAppOnboardingViewModel: ObservableObject {
 
     // MARK: - Strings
 
-    let introWordmark = "WIKIPEDIA"
+    /// VoiceOver label for the wordmark image on the intro step (the visible "WIKIPEDIA" is
+    /// an image asset). Localized: the name is transliterated in non-Latin scripts.
+    let introWordmark = CommonStrings.plainWikipediaName
     let introTitle = WMFLocalizedString("app-onboarding-intro-title", value: "All the world’s knowledge", comment: "Title of the first app onboarding screen.")
     let introBody = WMFLocalizedString("app-onboarding-intro-body", value: "Wikipedia is a free online encyclopedia with 65 million articles collaboratively written and maintained in more than 300 languages by a community of volunteers.", comment: "Description on the first app onboarding screen.")
     let introLearnMore = WMFLocalizedString("app-onboarding-intro-learn-more", value: "Learn more about Wikipedia", comment: "Title of the link on the first app onboarding screen that opens a web view with more information about Wikipedia.")
