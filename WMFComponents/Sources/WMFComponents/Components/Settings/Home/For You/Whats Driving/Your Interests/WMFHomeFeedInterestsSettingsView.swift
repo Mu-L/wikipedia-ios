@@ -137,7 +137,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
 
     private var searchBarContent: some View {
         HStack(spacing: 6) {
-            if let magnifyingGlass = WMFSFSymbolIcon.for(symbol: .magnifyingGlass) {
+            if let magnifyingGlass = WMFSFSymbolIcon.for(symbol: .magnifyingGlass, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                 Image(uiImage: magnifyingGlass)
                     .foregroundStyle(Color(uiColor: theme.secondaryText))
             }
@@ -149,7 +149,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                 .focused($searchIsFocused)
                 .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchField)
 
-            if viewModel.isSearchActive, let clearIcon = WMFSFSymbolIcon.for(symbol: .closeCircleFill) {
+            if viewModel.isSearchActive, let clearIcon = WMFSFSymbolIcon.for(symbol: .closeCircleFill, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                 Button {
                     viewModel.clearSearch()
                 } label: {
@@ -306,7 +306,7 @@ private struct WMFInterestSearchResultRow: View {
 
             Spacer()
 
-            if let icon = WMFSFSymbolIcon.for(symbol: card.isSelected ? .checkmarkCircleFill : .plusCircle) {
+            if let icon = WMFSFSymbolIcon.for(symbol: card.isSelected ? .checkmarkCircleFill : .plusCircle, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                 Image(uiImage: icon)
                     .foregroundStyle(Color(uiColor: theme.link))
             }
@@ -348,7 +348,7 @@ private struct TopicChipView: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 4) {
-            if let icon = WMFSFSymbolIcon.for(symbol: isSelected ? .checkmark : .add, font: .subheadline) {
+            if let icon = WMFSFSymbolIcon.for(symbol: isSelected ? .checkmark : .add, font: .subheadline, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                 Image(uiImage: icon)
                     .foregroundStyle(foregroundColor)
             }

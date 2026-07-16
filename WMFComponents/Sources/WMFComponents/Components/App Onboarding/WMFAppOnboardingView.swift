@@ -79,6 +79,11 @@ struct WMFAppOnboardingToolbar: View {
 
     private static let controlHeight: CGFloat = 44
 
+    // Frame-bounds the chevron: symbol images built from preferred fonts re-scale against the
+    // live (uncapped) system content size at render time, so the glyph must be constrained
+    // explicitly. The metric follows the capped environment.
+    @ScaledMetric private var chevronSize: CGFloat = 18
+
     var body: some View {
         ZStack {
             if viewModel.showsSkipAndDots {
@@ -135,8 +140,11 @@ struct WMFAppOnboardingToolbar: View {
             }
         } label: {
             Group {
-                if let chevron = WMFSFSymbolIcon.for(symbol: .chevronForward, font: .boldHeadline) {
+                if let chevron = WMFSFSymbolIcon.for(symbol: .chevronForward, font: .boldHeadline, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                     Image(uiImage: chevron)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: chevronSize, height: chevronSize)
                         .foregroundStyle(isIntroStep ? Color.white : Color(uiColor: theme.text))
                 }
             }

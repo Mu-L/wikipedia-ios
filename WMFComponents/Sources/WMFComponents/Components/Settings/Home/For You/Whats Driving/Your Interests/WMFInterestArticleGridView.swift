@@ -118,7 +118,7 @@ private struct WMFInterestArticleCardView: View {
                 .strokeBorder(Color(uiColor: theme.newBorder), lineWidth: 1)
         )
         .overlay(alignment: .bottomTrailing) {
-            if viewModel.isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmark, font: .subheadline) {
+            if viewModel.isSelected, let checkmark = WMFSFSymbolIcon.for(symbol: .checkmark, font: .subheadline, compatibleWith: dynamicTypeSize.wmfTraitCollection) {
                 Image(uiImage: checkmark)
                     .foregroundStyle(Color(uiColor: theme.link))
                     .padding(8)

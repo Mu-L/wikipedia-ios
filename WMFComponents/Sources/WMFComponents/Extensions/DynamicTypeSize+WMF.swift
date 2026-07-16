@@ -1,6 +1,12 @@
 import SwiftUI
 
 extension DynamicTypeSize {
+    /// Trait collection carrying the SwiftUI environment's Dynamic Type size, for UIKit-based
+    /// sizing (e.g. `WMFSFSymbolIcon.for(symbol:font:compatibleWith:)`) under a cap.
+    var wmfTraitCollection: UITraitCollection {
+        UITraitCollection(preferredContentSizeCategory: wmfContentSizeCategory)
+    }
+
     /// UIKit equivalent of the SwiftUI environment value, so UIFontMetrics-based fonts can
     /// honor a view-level dynamicTypeSize cap.
     var wmfContentSizeCategory: UIContentSizeCategory {
