@@ -6,14 +6,20 @@ struct WMFAppOnboardingFeedPreferenceView: View {
     @ObservedObject var viewModel: WMFAppOnboardingFeedPreferenceViewModel
     let theme: WMFTheme
 
-    private static let cardWidth: CGFloat = 170
-    private static let cardHeight: CGFloat = 220
+    // The container caps dynamicTypeSize for the whole onboarding flow; fonts resolve
+    // against the capped value via WMFFont.for(_:sized:).
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    // Scaled with Dynamic Type so text inside the cards has room to grow; all values scale
+    // by the same factor, preserving their ratios. The cards row swipes horizontally either way.
+    @ScaledMetric private var cardWidth: CGFloat = 170
+    @ScaledMetric private var cardHeight: CGFloat = 220
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 Text(viewModel.title)
-                    .font(Font(WMFFont.for(.boldTitle3)))
+                    .font(Font(WMFFont.for(.boldTitle3, sized: dynamicTypeSize)))
                     .foregroundStyle(Color(uiColor: theme.text))
                     .padding(.horizontal, 16)
                     .padding(.top, 24)
@@ -44,7 +50,7 @@ struct WMFAppOnboardingFeedPreferenceView: View {
                     cardsRow(cards: viewModel.personalizedCards)
                 } else {
                     Text(viewModel.personalizedDisabledExplanation)
-                        .font(Font(WMFFont.for(.callout)))
+                        .font(Font(WMFFont.for(.callout, sized: dynamicTypeSize)))
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                         .padding(.horizontal, 16)
                 }
@@ -60,7 +66,7 @@ struct WMFAppOnboardingFeedPreferenceView: View {
         return HStack(spacing: 12) {
             radioIcon(isSelected: isSelected, isEnabled: isEnabled)
             Text(title)
-                .font(Font(WMFFont.for(.boldCallout)))
+                .font(Font(WMFFont.for(.boldCallout, sized: dynamicTypeSize)))
                 .foregroundStyle(Color(uiColor: isEnabled ? theme.text : theme.secondaryText))
             Spacer()
         }
@@ -84,10 +90,10 @@ struct WMFAppOnboardingFeedPreferenceView: View {
             ProgressView()
             Spacer()
         }
-        .frame(height: Self.cardHeight)
+        .frame(height: cardHeight)
     }
 
-    private static let radioSize: CGFloat = 24
+    @ScaledMetric private var radioSize: CGFloat = 24
 
     @ViewBuilder
     private func radioIcon(isSelected: Bool, isEnabled: Bool) -> some View {
@@ -95,12 +101,12 @@ struct WMFAppOnboardingFeedPreferenceView: View {
             Image(uiImage: checkmark)
                 .resizable()
                 .scaledToFit()
-                .frame(width: Self.radioSize, height: Self.radioSize)
+                .frame(width: radioSize, height: radioSize)
                 .foregroundStyle(Color(uiColor: theme.link))
         } else {
             Circle()
                 .strokeBorder(Color(uiColor: isEnabled ? theme.secondaryText : theme.border), lineWidth: 2)
-                .frame(width: Self.radioSize, height: Self.radioSize)
+                .frame(width: radioSize, height: radioSize)
         }
     }
 
@@ -110,7 +116,7 @@ struct WMFAppOnboardingFeedPreferenceView: View {
             HStack(alignment: .top, spacing: 12) {
                 ForEach(cards) { card in
                     WMFAppOnboardingPreviewCardView(viewModel: card, theme: theme)
-                        .frame(width: Self.cardWidth, height: Self.cardHeight)
+                        .frame(width: cardWidth, height: cardHeight)
                 }
             }
             .padding(.horizontal, 16)
@@ -125,13 +131,20 @@ private struct WMFAppOnboardingPreviewCardView: View {
     @ObservedObject var viewModel: WMFAppOnboardingPreviewCardViewModel
     let theme: WMFTheme
 
+    // Scales with Dynamic Type alongside the card's outer frame, keeping the image band's
+    // proportion of the card constant.
+    @ScaledMetric private var imageHeight: CGFloat = 100
+
+    // Capped by the onboarding container; fonts resolve against the capped value.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             if let uiImage = viewModel.uiImage {
                 // The container drives layout; scaledToFill images would otherwise report
                 // their own width and inflate the card beyond its fixed size
                 Color.clear
-                    .frame(height: 100)
+                    .frame(height: imageHeight)
                     .overlay(
                         Image(uiImage: uiImage)
                             .resizable()
@@ -151,12 +164,12 @@ private struct WMFAppOnboardingPreviewCardView: View {
                     topicPillView(pill)
                 }
                 Text(viewModel.title)
-                    .font(Font(WMFFont.for(.semiboldHeadline)))
+                    .font(Font(WMFFont.for(.semiboldHeadline, sized: dynamicTypeSize)))
                     .foregroundStyle(Color(uiColor: theme.text))
                     .lineLimit(2)
                 if let description = viewModel.description {
                     Text(description)
-                        .font(Font(WMFFont.for(.callout)))
+                        .font(Font(WMFFont.for(.callout, sized: dynamicTypeSize)))
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                 }
             }
@@ -178,7 +191,7 @@ private struct WMFAppOnboardingPreviewCardView: View {
 
     private func topicPillView(_ text: String) -> some View {
         Text(text)
-            .font(Font(WMFFont.for(.mediumFootnote)))
+            .font(Font(WMFFont.for(.mediumFootnote, sized: dynamicTypeSize)))
             .foregroundStyle(Color(uiColor: theme.paperBackground))
             .padding(.horizontal, 10)
             .padding(.vertical, 4)

@@ -33,6 +33,10 @@ public struct WMFAppOnboardingView: View {
         }
         .background(Color(uiColor: theme.paperBackground).ignoresSafeArea())
         .environment(\.colorScheme, colorScheme)
+        // Cap Dynamic Type for the whole flow: beyond accessibility2 the step titles render
+        // one word per line and collide with the floating toolbar. Step views resolve their
+        // WMFFonts against this capped size (see WMFFont.for(_:sized:)).
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
     }
 
     @ViewBuilder
@@ -68,6 +72,11 @@ struct WMFAppOnboardingToolbar: View {
     @ObservedObject var viewModel: WMFAppOnboardingViewModel
     let theme: WMFTheme
 
+    // The onboarding container caps dynamicTypeSize; fonts resolve against the capped
+    // value via WMFFont.for(_:sized:), since WMFFont ignores the SwiftUI cap.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+
     private static let controlHeight: CGFloat = 44
 
     var body: some View {
@@ -77,7 +86,7 @@ struct WMFAppOnboardingToolbar: View {
                     Button(viewModel.skipTitle) {
                         viewModel.skip()
                     }
-                    .font(Font(WMFFont.for(.body)))
+                    .font(Font(WMFFont.for(.body, sized: dynamicTypeSize)))
                     .foregroundStyle(Color(uiColor: theme.text))
                     .padding(.horizontal, 20)
                     .frame(height: Self.controlHeight)

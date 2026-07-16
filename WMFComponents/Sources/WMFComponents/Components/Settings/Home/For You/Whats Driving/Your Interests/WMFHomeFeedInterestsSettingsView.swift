@@ -10,6 +10,15 @@ public struct WMFHomeFeedInterestsSettingsView: View {
 
     var theme: WMFTheme { appEnvironment.theme }
 
+    // This screen caps Dynamic Type at accessibility2 (larger sizes mangle the grid/chips).
+    // The cap modifier below only affects children, so this view's own fonts resolve against
+    // the min'd value; child structs read the capped environment directly.
+    @Environment(\.dynamicTypeSize) private var systemDynamicTypeSize
+
+    private var dynamicTypeSize: DynamicTypeSize {
+        min(systemDynamicTypeSize, .accessibility2)
+    }
+
     public init(viewModel: WMFHomeFeedInterestsSettingsViewModel, bottomContentInset: CGFloat = 0) {
         self.viewModel = viewModel
         self.bottomContentInset = bottomContentInset
@@ -48,7 +57,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                         HStack {
                             Spacer()
                             Text(viewModel.emptyMessage)
-                                .font(Font(WMFFont.for(.headline)))
+                                .font(Font(WMFFont.for(.headline, sized: dynamicTypeSize)))
                                 .foregroundStyle(Color(uiColor: theme.secondaryText))
                                 .multilineTextAlignment(.center)
                             Spacer()
@@ -62,6 +71,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(uiColor: theme.paperBackground))
         .environment(\.colorScheme, theme.preferredColorScheme)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
     }
 
     // MARK: - Header
@@ -70,22 +80,37 @@ public struct WMFHomeFeedInterestsSettingsView: View {
     private var header: some View {
         if viewModel.selectedCount == 0 {
             Text(viewModel.headerTitle)
-                .font(Font(WMFFont.for(.boldTitle3)))
+                .font(Font(WMFFont.for(.boldTitle3, sized: dynamicTypeSize)))
                 .foregroundStyle(Color(uiColor: theme.text))
+        } else if dynamicTypeSize.isAccessibilitySize {
+            // Side-by-side would squeeze both labels into word-breaking columns at
+            // accessibility sizes — stack them instead.
+            VStack(alignment: .leading, spacing: 8) {
+                selectedCountText
+                deselectAllButton
+            }
         } else {
             HStack {
-                Text(viewModel.selectedCountTitle)
-                    .font(Font(WMFFont.for(.boldTitle3)))
-                    .foregroundStyle(Color(uiColor: theme.text))
+                selectedCountText
                 Spacer()
-                Button(viewModel.deselectAllTitle) {
-                    viewModel.deselectAll()
-                }
-                .font(Font(WMFFont.for(.mediumSubheadline)))
-                .foregroundStyle(Color(uiColor: theme.link))
-                .accessibilityIdentifier(AccessibilityIdentifiers.Interests.deselectAllButton)
+                deselectAllButton
             }
         }
+    }
+
+    private var selectedCountText: some View {
+        Text(viewModel.selectedCountTitle)
+            .font(Font(WMFFont.for(.boldTitle3, sized: dynamicTypeSize)))
+            .foregroundStyle(Color(uiColor: theme.text))
+    }
+
+    private var deselectAllButton: some View {
+        Button(viewModel.deselectAllTitle) {
+            viewModel.deselectAll()
+        }
+        .font(Font(WMFFont.for(.mediumSubheadline, sized: dynamicTypeSize)))
+        .foregroundStyle(Color(uiColor: theme.link))
+        .accessibilityIdentifier(AccessibilityIdentifiers.Interests.deselectAllButton)
     }
 
     // MARK: - Search
@@ -102,7 +127,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                     viewModel.clearSearch()
                     searchIsFocused = false
                 }
-                .font(Font(WMFFont.for(.body)))
+                .font(Font(WMFFont.for(.body, sized: dynamicTypeSize)))
                 .foregroundStyle(Color(uiColor: theme.link))
                 .accessibilityIdentifier(AccessibilityIdentifiers.Interests.searchCancelButton)
             }
@@ -117,7 +142,7 @@ public struct WMFHomeFeedInterestsSettingsView: View {
                     .foregroundStyle(Color(uiColor: theme.secondaryText))
             }
             TextField(viewModel.searchPlaceholder, text: $viewModel.searchTerm)
-                .font(Font(WMFFont.for(.body)))
+                .font(Font(WMFFont.for(.body, sized: dynamicTypeSize)))
                 .foregroundStyle(Color(uiColor: theme.text))
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
@@ -236,12 +261,17 @@ private struct WMFInterestsSearchBarBackground: ViewModifier {
 }
 
 private struct WMFInterestSearchResultRow: View {
+    // Capped by the parent screen; fonts resolve against the capped value.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
 
     let row: WMFHomeFeedInterestsSettingsViewModel.SearchRow
     let theme: WMFTheme
     let onTap: () -> Void
 
     @ObservedObject private var card: WMFInterestArticleCardViewModel
+
+    @ScaledMetric private var thumbnailSize: CGFloat = 44
 
     init(row: WMFHomeFeedInterestsSettingsViewModel.SearchRow, theme: WMFTheme, onTap: @escaping () -> Void) {
         self.row = row
@@ -261,14 +291,14 @@ private struct WMFInterestSearchResultRow: View {
                     Color(uiColor: theme.midBackground)
                 }
             }
-            .frame(width: 44, height: 44)
+            .frame(width: thumbnailSize, height: thumbnailSize)
             .clipShape(RoundedRectangle(cornerRadius: 6))
 
             VStack(alignment: .leading, spacing: 2) {
-                WMFHtmlText(html: card.title, styles: HtmlUtils.Styles(font: WMFFont.for(.subheadline), boldFont: WMFFont.for(.boldSubheadline), italicsFont: WMFFont.for(.italicSubheadline), boldItalicsFont: WMFFont.for(.italicSubheadline), color: theme.text, linkColor: theme.link, lineSpacing: 1))
+                WMFHtmlText(html: card.title, styles: HtmlUtils.Styles(font: WMFFont.for(.subheadline, sized: dynamicTypeSize), boldFont: WMFFont.for(.boldSubheadline, sized: dynamicTypeSize), italicsFont: WMFFont.for(.italicSubheadline, sized: dynamicTypeSize), boldItalicsFont: WMFFont.for(.italicSubheadline, sized: dynamicTypeSize), color: theme.text, linkColor: theme.link, lineSpacing: 1))
                 if let description = card.description {
                     Text(description)
-                        .font(Font(WMFFont.for(.caption1)))
+                        .font(Font(WMFFont.for(.caption1, sized: dynamicTypeSize)))
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                         .lineLimit(2)
                 }
@@ -305,6 +335,9 @@ private struct WMFInterestSearchResultRow: View {
 }
 
 private struct TopicChipView: View {
+    // Capped by the parent screen; fonts resolve against the capped value.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let title: String
     let isSelected: Bool
     let theme: WMFTheme
@@ -320,7 +353,7 @@ private struct TopicChipView: View {
                     .foregroundStyle(foregroundColor)
             }
             Text(title)
-                .font(Font(WMFFont.for(.subheadline)))
+                .font(Font(WMFFont.for(.subheadline, sized: dynamicTypeSize)))
                 .foregroundStyle(foregroundColor)
         }
         .padding(.horizontal, 14)
@@ -337,13 +370,16 @@ private struct TopicChipView: View {
 
 /// A search-language chip: mimics the topic chip capsule style but carries no selection icon.
 private struct LanguageChipView: View {
+    // Capped by the parent screen; fonts resolve against the capped value.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     let title: String
     let isSelected: Bool
     let theme: WMFTheme
 
     var body: some View {
         Text(title)
-            .font(Font(WMFFont.for(.subheadline)))
+            .font(Font(WMFFont.for(.subheadline, sized: dynamicTypeSize)))
             .foregroundStyle(isSelected ? Color(uiColor: theme.paperBackground) : Color(uiColor: theme.text))
             .padding(.horizontal, 14)
             .padding(.vertical, 7)

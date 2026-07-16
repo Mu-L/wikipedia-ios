@@ -7,6 +7,10 @@ struct WMFInterestArticleGridView: View {
     let theme: WMFTheme
     let onTap: (WMFInterestArticleCardViewModel) -> Void
 
+    // At accessibility sizes half-width columns word-break the scaled titles, so the grid
+    // collapses to a single full-width column.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private var columns: (left: [WMFInterestArticleCardViewModel], right: [WMFInterestArticleCardViewModel]) {
         var left: [WMFInterestArticleCardViewModel] = []
         var right: [WMFInterestArticleCardViewModel] = []
@@ -40,10 +44,16 @@ struct WMFInterestArticleGridView: View {
     }
 
     var body: some View {
-        let cols = columns
-        HStack(alignment: .top, spacing: 12) {
-            column(cols.left)
-            column(cols.right)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                column(viewModels)
+            } else {
+                let cols = columns
+                HStack(alignment: .top, spacing: 12) {
+                    column(cols.left)
+                    column(cols.right)
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -63,6 +73,12 @@ struct WMFInterestArticleGridView: View {
 
 private struct WMFInterestArticleCardView: View {
 
+    // Capped by the interests screen; fonts resolve against the capped value.
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    // Scales with Dynamic Type so the image band keeps its proportion of the card.
+    @ScaledMetric private var imageHeight: CGFloat = 100
+
     @ObservedObject var viewModel: WMFInterestArticleCardViewModel
     let theme: WMFTheme
 
@@ -72,7 +88,7 @@ private struct WMFInterestArticleCardView: View {
                 // The container drives layout; scaledToFill images would otherwise report
                 // their own width and inflate the card beyond its column width
                 Color.clear
-                    .frame(height: 100)
+                    .frame(height: imageHeight)
                     .overlay(
                         Image(uiImage: uiImage)
                             .resizable()
@@ -82,10 +98,10 @@ private struct WMFInterestArticleCardView: View {
                     .contentShape(Rectangle())
             }
             VStack(alignment: .leading, spacing: 4) {
-                WMFHtmlText(html: viewModel.title, styles: HtmlUtils.Styles(font: WMFFont.for(.semiboldHeadline), boldFont: WMFFont.for(.boldHeadline), italicsFont: WMFFont.for(.semiboldHeadline), boldItalicsFont: WMFFont.for(.boldHeadline), color: theme.text, linkColor: theme.link, lineSpacing: 1))
+                WMFHtmlText(html: viewModel.title, styles: HtmlUtils.Styles(font: WMFFont.for(.semiboldHeadline, sized: dynamicTypeSize), boldFont: WMFFont.for(.boldHeadline, sized: dynamicTypeSize), italicsFont: WMFFont.for(.semiboldHeadline, sized: dynamicTypeSize), boldItalicsFont: WMFFont.for(.boldHeadline, sized: dynamicTypeSize), color: theme.text, linkColor: theme.link, lineSpacing: 1))
                 if let description = viewModel.description {
                     Text(description)
-                        .font(Font(WMFFont.for(.callout)))
+                        .font(Font(WMFFont.for(.callout, sized: dynamicTypeSize)))
                         .foregroundStyle(Color(uiColor: theme.secondaryText))
                         .fixedSize(horizontal: false, vertical: true)
                 }
