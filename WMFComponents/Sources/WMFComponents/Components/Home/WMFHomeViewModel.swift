@@ -250,4 +250,12 @@ public final class WMFHomeViewModel: ObservableObject {
     var languageButtonTitle: String {
         selectedLanguage?.languageCode.uppercased() ?? ""
     }
+
+    /// The language menu only applies to feeds that follow the Home language selection. The embedded
+    /// legacy Explore feed (phase 1 Community segment) manages languages through its own feed
+    /// settings, so the picker is hidden while it is showing.
+    var shouldShowLanguagePicker: Bool {
+        guard selectedTab == .community else { return true }
+        return makeEmbeddedCommunityViewController == nil
+    }
 }

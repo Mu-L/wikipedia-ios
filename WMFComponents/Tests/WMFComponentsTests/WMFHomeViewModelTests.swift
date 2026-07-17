@@ -136,6 +136,28 @@ final class WMFHomeViewModelTests: XCTestCase {
         XCTAssertTrue(vm.communityPages.isEmpty)
     }
 
+    // MARK: - Language Picker Visibility
+
+    func testLanguagePickerHiddenOnCommunityTabWithEmbeddedContent() {
+        let (vm, _) = makeViewModel()
+        vm.makeEmbeddedCommunityViewController = { UIViewController() }
+        vm.selectedTab = .community
+        XCTAssertFalse(vm.shouldShowLanguagePicker)
+    }
+
+    func testLanguagePickerShownOnForYouTabWithEmbeddedContent() {
+        let (vm, _) = makeViewModel()
+        vm.makeEmbeddedCommunityViewController = { UIViewController() }
+        vm.selectedTab = .forYou
+        XCTAssertTrue(vm.shouldShowLanguagePicker)
+    }
+
+    func testLanguagePickerShownOnCommunityTabWithoutEmbeddedContent() {
+        let (vm, _) = makeViewModel()
+        vm.selectedTab = .community
+        XCTAssertTrue(vm.shouldShowLanguagePicker)
+    }
+
     // MARK: - Selected Language Clears Feeds
 
     func testChangingLanguageClearsForYouFeed() {

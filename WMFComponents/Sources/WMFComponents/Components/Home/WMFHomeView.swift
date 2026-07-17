@@ -22,32 +22,34 @@ public struct WMFHomeView: View {
                 }
                 .pickerStyle(.segmented)
 
-                Menu {
-                    ForEach(viewModel.languages) { language in
-                        Button {
-                            viewModel.didSelectLanguage?(language)
-                        } label: {
-                            if language.languageCode == viewModel.selectedLanguage?.languageCode {
-                                Label(language.localizedName, systemImage: "checkmark")
-                            } else {
-                                Text(language.localizedName)
+                if viewModel.shouldShowLanguagePicker {
+                    Menu {
+                        ForEach(viewModel.languages) { language in
+                            Button {
+                                viewModel.didSelectLanguage?(language)
+                            } label: {
+                                if language.languageCode == viewModel.selectedLanguage?.languageCode {
+                                    Label(language.localizedName, systemImage: "checkmark")
+                                } else {
+                                    Text(language.localizedName)
+                                }
                             }
                         }
-                    }
 
-                    Divider()
+                        Divider()
 
-                    Button {
-                        viewModel.didTapEditLanguages?()
+                        Button {
+                            viewModel.didTapEditLanguages?()
+                        } label: {
+                            Label(viewModel.editLanguagesTitle, systemImage: "globe")
+                        }
                     } label: {
-                        Label(viewModel.editLanguagesTitle, systemImage: "globe")
+                        Text(viewModel.languageButtonTitle)
+                            .font(Font(WMFFont.for(.semiboldHeadline)))
+                            .foregroundStyle(Color(uiColor: theme.link))
                     }
-                } label: {
-                    Text(viewModel.languageButtonTitle)
-                        .font(Font(WMFFont.for(.semiboldHeadline)))
-                        .foregroundStyle(Color(uiColor: theme.link))
+                    .accessibilityIdentifier(AccessibilityIdentifiers.Home.languagePickerButton)
                 }
-                .accessibilityIdentifier(AccessibilityIdentifiers.Home.languagePickerButton)
             }
             .padding()
 
