@@ -557,7 +557,6 @@
 "explore-feed-preferences-additional-languages-footer-text" = "Text explaining how to add additional languages";
 "explore-feed-preferences-card-hidden-title" = "Title for button that appears in place of feed card hidden by user via the overflow button";
 "explore-feed-preferences-continue-reading-description" = "Description of Continue reading section of Explore feed";
-"explore-feed-preferences-customize-explore-feed" = "Title of the Settings section that allows users to customize the Explore feed";
 "explore-feed-preferences-customize-explore-feed-action-title" = "Title for action that allows users to go to the Explore feed settings screen";
 "explore-feed-preferences-customize-explore-feed-footer-text" = "Text for explaining the effects of hiding feed cards";
 "explore-feed-preferences-explore-tab" = "Text for the setting that allows users to toggle whether the Explore tab is enabled or not";
@@ -894,6 +893,7 @@
 "nearby-distance-label-km" = "Label for showing distance in kilometers to nearby geotagged articles.\n\nParameters:\n* $1 - the number of kilometers. (The iOS app doesn't support pluralization syntax yet.)\n{{Related|Wikipedia-ios-nearby-distance-label}}";
 "nearby-distance-label-meters" = "Label for showing distance in meters to nearby geotagged articles.\n\nParameters:\n* $1 - the number of meters.\n{{Related|Wikipedia-ios-nearby-distance-label}}";
 "nearby-distance-label-miles" = "Label for showing distance in miles to nearby geotagged articles.\n\nParamaeters:\n* $1 - the number of miles. (The iOS app doesn't support pluralization syntax yet.)\n{{Related|Wikipedia-ios-nearby-distance-label}} {{Identical|Mile}}";
+"new-explore-feed-preferences-customize-explore-feed" = "Title of the Settings section that allows users to customize the Explore feed";
 "new-password-instructions" = "Instructions for password change interface";
 "new-password-title" = "Title for password change interface";
 "new-tab" = "Title for creating a new tab.";

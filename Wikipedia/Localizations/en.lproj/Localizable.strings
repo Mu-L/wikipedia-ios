@@ -557,7 +557,6 @@
 "explore-feed-preferences-additional-languages-footer-text" = "Additional languages can be added in the ‘My languages’ settings page.";
 "explore-feed-preferences-card-hidden-title" = "Card hidden";
 "explore-feed-preferences-continue-reading-description" = "Quick link back to reading an open article";
-"explore-feed-preferences-customize-explore-feed" = "Customize the Explore feed";
 "explore-feed-preferences-customize-explore-feed-action-title" = "Customize Explore feed";
 "explore-feed-preferences-customize-explore-feed-footer-text" = "Hiding a card type will stop this card type from appearing in the Explore feed.";
 "explore-feed-preferences-explore-tab" = "Explore tab";
@@ -894,6 +893,7 @@
 "nearby-distance-label-km" = "$1 km";
 "nearby-distance-label-meters" = "{{PLURAL:$1|$1 meter|$1 meters}}";
 "nearby-distance-label-miles" = "$1 miles";
+"new-explore-feed-preferences-customize-explore-feed" = "Customize the Community feed";
 "new-password-instructions" = "You logged in with a temporary password. To finish logging in set a new password here.";
 "new-password-title" = "Set your password";
 "new-tab" = "New tab";
