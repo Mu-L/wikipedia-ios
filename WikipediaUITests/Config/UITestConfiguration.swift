@@ -15,7 +15,6 @@ struct UITestConfiguration {
     let resetsPreferredLanguages: Bool
     let suppressesActivityTabOnboarding: Bool
     let suppressesGamesAnnouncement: Bool
-    let suppressesReadingChallengeAnnouncement: Bool
     let themeName: String?
     let languageCode: String
 
@@ -27,8 +26,7 @@ struct UITestConfiguration {
         onboardingState: OnboardingState = .completed,
         resetsPreferredLanguages: Bool = true,
         suppressesActivityTabOnboarding: Bool = true,
-        suppressesGamesAnnouncement: Bool = true,
-        suppressesReadingChallengeAnnouncement: Bool = true
+        suppressesGamesAnnouncement: Bool = true
     ) {
         self.onboardingState = onboardingState
         self.httpClientProfile = ProcessInfo.processInfo.value(for: .httpClientProfile) ?? defaultHTTPClientProfile
@@ -36,7 +34,6 @@ struct UITestConfiguration {
         self.resetsPreferredLanguages = resetsPreferredLanguages
         self.suppressesActivityTabOnboarding = suppressesActivityTabOnboarding
         self.suppressesGamesAnnouncement = suppressesGamesAnnouncement
-        self.suppressesReadingChallengeAnnouncement = suppressesReadingChallengeAnnouncement
         self.languageCode = ProcessInfo.processInfo.value(for: .uiTestLanguageCode) ?? defaultLanguageCode
     }
 
@@ -49,10 +46,6 @@ struct UITestConfiguration {
 
         if resetsPreferredLanguages {
             argumentValues.append(UITestLaunchArgumentValue(.resetPreferredLanguages, value: "YES"))
-        }
-
-        if suppressesReadingChallengeAnnouncement {
-            argumentValues.append(UITestLaunchArgumentValue(.suppressReadingChallengeAnnouncement, value: "YES"))
         }
 
         if suppressesActivityTabOnboarding {

@@ -1,9 +1,9 @@
 import SwiftUI
 import WidgetKit
 
-public struct WMFReadingChallengeWidgetView: View {
+public struct WMFRandomWidgetView: View {
 
-    @ObservedObject var viewModel: WMFReadingChallengeWidgetViewModel
+    @ObservedObject var viewModel: WMFRandomWidgetViewModel
     @ObservedObject var appEnvironment = WMFAppEnvironment.current
     @Environment(\.widgetFamily) var widgetFamily
 
@@ -30,7 +30,7 @@ public struct WMFReadingChallengeWidgetView: View {
 
     // MARK: - Init
 
-    public init(viewModel: WMFReadingChallengeWidgetViewModel) {
+    public init(viewModel: WMFRandomWidgetViewModel) {
         self.viewModel = viewModel
     }
 

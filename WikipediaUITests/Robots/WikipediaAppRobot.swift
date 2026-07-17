@@ -41,16 +41,14 @@ extension XCTestCase {
         onboardingState: UITestConfiguration.OnboardingState,
         resetsPreferredLanguages: Bool = true,
         suppressesActivityTabOnboarding: Bool = true,
-        suppressesGamesAnnouncement: Bool = true,
-        suppressesReadingChallengeAnnouncement: Bool = true
+        suppressesGamesAnnouncement: Bool = true
     ) -> WikipediaAppRobot {
         let app = XCUIApplication()
         let configuration = UITestConfiguration(
             onboardingState: onboardingState,
             resetsPreferredLanguages: resetsPreferredLanguages,
             suppressesActivityTabOnboarding: suppressesActivityTabOnboarding,
-            suppressesGamesAnnouncement: suppressesGamesAnnouncement,
-            suppressesReadingChallengeAnnouncement: suppressesReadingChallengeAnnouncement
+            suppressesGamesAnnouncement: suppressesGamesAnnouncement
         )
         app.configureForUITestLaunch(configuration: configuration)
         app.launch()
