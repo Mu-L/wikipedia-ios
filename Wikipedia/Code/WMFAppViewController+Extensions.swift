@@ -268,10 +268,17 @@ extension WMFAppViewController {
 
         viewController.present(alertController, animated: true, completion: nil)
     }
-
-    @objc func showRandomArticleFromShortcut(siteURL: URL?, animated: Bool) {
+    
+    @objc func showRandomArticleFromShortcut(siteURL: URL?, animated: Bool, userInfo: [AnyHashable: Any]? = nil) {
         guard let navVC = currentTabNavigationController else { return }
-        let coordinator = RandomArticleCoordinator(navigationController: navVC, articleURL: nil, siteURL: siteURL, dataStore: dataStore, theme: theme, source: .undefined, animated: animated)
+        let articleSource: ArticleSource
+        if let sourceInt = userInfo?[ArticleSourceUserInfoKeys.articleSource] as? Int,
+           let source = ArticleSource(rawValue: sourceInt) {
+            articleSource = source
+        } else {
+            articleSource = .undefined
+        }
+        let coordinator = RandomArticleCoordinator(navigationController: navVC, articleURL: nil, siteURL: siteURL, dataStore: dataStore, theme: theme, source: articleSource, animated: animated)
         coordinator.start()
     }
 

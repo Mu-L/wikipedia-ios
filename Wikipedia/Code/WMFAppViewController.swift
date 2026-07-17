@@ -1203,7 +1203,7 @@ final class WMFAppViewController: UITabBarController, AppTabBarDelegate {
 
         case .random:
             dismissPresentedViewControllers()
-            showRandomArticleFromShortcut(siteURL: siteURL, animated: animated)
+            showRandomArticleFromShortcut(siteURL: siteURL, animated: animated, userInfo: activity.userInfo)
 
         case .activity:
             
@@ -1574,7 +1574,7 @@ final class WMFAppViewController: UITabBarController, AppTabBarDelegate {
 
     private func showRandomArticleFromShortcut(animated: Bool) {
         dismissPresentedViewControllers()
-        showRandomArticleFromShortcut(siteURL: siteURL, animated: animated)
+        showRandomArticleFromShortcut(siteURL: siteURL, animated: animated, userInfo: nil)
     }
 
     private func showNearby(animated: Bool) {
