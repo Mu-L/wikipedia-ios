@@ -1500,7 +1500,8 @@ extension ExploreViewController: ExploreCardCollectionViewCellDelegate {
         let hideThisCardHidesAll = group.contentGroupKind.isGlobal && group.contentGroupKind.isNonDateBased
 
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let customizeExploreFeed = UIAlertAction(title: CommonStrings.customizeExploreFeedTitle, style: .default) { (_) in
+        let customizeTitle = WMFDeveloperSettingsDataController.shared.isCommunityFeedMode ? CommonStrings.customizeCommunityFeedTitle : CommonStrings.customizeExploreFeedTitle
+        let customizeExploreFeed = UIAlertAction(title: customizeTitle, style: .default) { (_) in
             let exploreFeedSettingsViewController = ExploreFeedSettingsViewController()
             exploreFeedSettingsViewController.showCloseButton = true
             exploreFeedSettingsViewController.dataStore = self.dataStore

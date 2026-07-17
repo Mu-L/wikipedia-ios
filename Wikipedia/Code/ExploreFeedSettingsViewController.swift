@@ -190,7 +190,7 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
     /// Explore tab toggle and the "turn off the feed" footers are hidden. With home phase 2, the
     /// reworked community feed replaces it and the screen returns to its Explore feed behavior.
     private var isCommunityMode: Bool {
-        WMFDeveloperSettingsDataController.shared.enableHomeTab && !WMFDeveloperSettingsDataController.shared.enableHomePhase2
+        WMFDeveloperSettingsDataController.shared.isCommunityFeedMode
     }
 
     private func configureNavigationBar() {
@@ -255,12 +255,23 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
 
     // MARK: Sections
 
-    let togglingFeedCardsFooterText = WMFLocalizedString("new-explore-feed-preferences-languages-footer-text", value: "Hiding all Community feed cards in all of your languages will turn off the Explore tab.", comment: "Text for explaining the effects of hiding all feed cards")
+    // Only shown in baseline (non-community) mode — hiding all cards can turn the feed off there.
+    let togglingFeedCardsFooterText = WMFLocalizedString("explore-feed-preferences-languages-footer-text", value: "Hiding all Explore feed cards in all of your languages will turn off the Explore tab.", comment: "Text for explaining the effects of hiding all feed cards")
 
     private lazy var customizationSection: ExploreFeedSettingsSection = {
-        let hidingCardFooterText = WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed-footer-text", value: "Hiding a card type will stop this card type from appearing in the Community feed.", comment: "Text for explaining the effects of hiding feed cards")
-        let footerTitle = isCommunityMode ? hidingCardFooterText : String.localizedStringWithFormat("%@ %@", hidingCardFooterText, togglingFeedCardsFooterText)
-        return ExploreFeedSettingsSection(headerTitle: WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed", value: "Customize the Community feed", comment: "Title of the Settings section that allows users to customize the Explore feed"), footerTitle: footerTitle, items: feedCards)
+        // In community mode the feed is presented as the Community feed and cannot be turned off, so
+        // the strings say "Community feed" (new keys) and drop the "will turn off the Explore tab"
+        // footer. Baseline keeps the original Explore feed strings and keys.
+        if isCommunityMode {
+            let headerTitle = WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed", value: "Customize the Community feed", comment: "Title of the Settings section that allows users to customize the Community feed")
+            let footerTitle = WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed-footer-text", value: "Hiding a card type will stop this card type from appearing in the Community feed.", comment: "Text for explaining the effects of hiding feed cards")
+            return ExploreFeedSettingsSection(headerTitle: headerTitle, footerTitle: footerTitle, items: feedCards)
+        } else {
+            let headerTitle = WMFLocalizedString("explore-feed-preferences-customize-explore-feed", value: "Customize the Explore feed", comment: "Title of the Settings section that allows users to customize the Explore feed")
+            let hidingCardFooterText = WMFLocalizedString("explore-feed-preferences-customize-explore-feed-footer-text", value: "Hiding a card type will stop this card type from appearing in the Explore feed.", comment: "Text for explaining the effects of hiding feed cards")
+            let footerTitle = String.localizedStringWithFormat("%@ %@", hidingCardFooterText, togglingFeedCardsFooterText)
+            return ExploreFeedSettingsSection(headerTitle: headerTitle, footerTitle: footerTitle, items: feedCards)
+        }
     }()
 
     private lazy var mainSection: ExploreFeedSettingsSection = {

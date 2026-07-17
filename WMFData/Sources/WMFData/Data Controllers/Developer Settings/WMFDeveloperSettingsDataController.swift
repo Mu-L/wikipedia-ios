@@ -106,6 +106,12 @@ public protocol WMFDeveloperSettingsDataControlling: AnyObject {
         }
     }
 
+    /// True while the legacy Explore feed backs the Home tab's Community segment (home tab on, phase 2
+    /// off). In this mode the feed is presented as the "Community feed" throughout the UI.
+    public var isCommunityFeedMode: Bool {
+        enableHomeTab && !enableHomePhase2
+    }
+
     public var enableYiRLoginExperimentControl: Bool {
         get { (try? userDefaultsStore?.load(key: WMFUserDefaultsKey.developerSettingsYiRV3LoginExperimentControl.rawValue)) ?? false }
         set { try? userDefaultsStore?.save(key: WMFUserDefaultsKey.developerSettingsYiRV3LoginExperimentControl.rawValue, value: newValue) }

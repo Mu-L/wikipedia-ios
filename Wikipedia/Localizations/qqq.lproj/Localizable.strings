@@ -282,6 +282,8 @@
 "collect-prize-headline" = "Headline for collect prize modal";
 "collect-prize-subtitle" = "Subtitle for collect prize modal. Please leave %% unchanged for proper formatting.";
 "collect-prize-title" = "Title for collect prize modal sheet and button";
+"community-detail-back-button-title" = "Title for button that allows users to exit detail view and return to the Community feed.";
+"community-feed-preferences-global-card-footer-text" = "Text describing the effects of turning off a global card";
 "compass-direction" = "Spoken description of compass direction, e.g. \"at 3 o'clock\" means \"to the right\", \"at 11 o'clock\" means \"slightly to the left\", etc. $1 is the hour.";
 "confirm-donation-history-deletion-subtitle" = "Subtitle for confirm local donation history deletion alert";
 "confirm-donation-history-deletion-title" = "Title for confirm local donation history deletion alert";
@@ -557,7 +559,10 @@
 "explore-feed-preferences-additional-languages-footer-text" = "Text explaining how to add additional languages";
 "explore-feed-preferences-card-hidden-title" = "Title for button that appears in place of feed card hidden by user via the overflow button";
 "explore-feed-preferences-continue-reading-description" = "Description of Continue reading section of Explore feed";
+"explore-feed-preferences-customize-community-feed-action-title" = "Title for action that allows users to go to the Community feed settings screen";
+"explore-feed-preferences-customize-explore-feed" = "Title of the Settings section that allows users to customize the Explore feed";
 "explore-feed-preferences-customize-explore-feed-action-title" = "Title for action that allows users to go to the Explore feed settings screen";
+"explore-feed-preferences-customize-explore-feed-footer-text" = "Text for explaining the effects of hiding feed cards";
 "explore-feed-preferences-explore-tab" = "Text for the setting that allows users to toggle whether the Explore tab is enabled or not";
 "explore-feed-preferences-featured-article-description" = "Description of Featured article section of Explore feed";
 "explore-feed-preferences-feed-card-visibility-all-languages-off" = "Text for Explore feed card setting indicating that the feed card is hidden in all preferred languages";
@@ -573,6 +578,7 @@
 "explore-feed-preferences-hide-card-action-title" = "Title for action that allows users to hide a feed card";
 "explore-feed-preferences-hide-feed-cards-action-title" = "Title for action that allows users to hide all feed cards of given type - $1 is replaced with feed card type";
 "explore-feed-preferences-in-the-news-description" = "Description of In the news section of Explore feed";
+"explore-feed-preferences-languages-footer-text" = "Text for explaining the effects of hiding all feed cards";
 "explore-feed-preferences-on-this-day-description" = "Description of On this day section of Explore feed";
 "explore-feed-preferences-places-description" = "Description of Places section of Explore feed";
 "explore-feed-preferences-potd-description" = "Description of Picture of the day section of Explore feed";
@@ -894,9 +900,8 @@
 "nearby-distance-label-km" = "Label for showing distance in kilometers to nearby geotagged articles.\n\nParameters:\n* $1 - the number of kilometers. (The iOS app doesn't support pluralization syntax yet.)\n{{Related|Wikipedia-ios-nearby-distance-label}}";
 "nearby-distance-label-meters" = "Label for showing distance in meters to nearby geotagged articles.\n\nParameters:\n* $1 - the number of meters.\n{{Related|Wikipedia-ios-nearby-distance-label}}";
 "nearby-distance-label-miles" = "Label for showing distance in miles to nearby geotagged articles.\n\nParamaeters:\n* $1 - the number of miles. (The iOS app doesn't support pluralization syntax yet.)\n{{Related|Wikipedia-ios-nearby-distance-label}} {{Identical|Mile}}";
-"new-explore-feed-preferences-customize-explore-feed" = "Title of the Settings section that allows users to customize the Explore feed";
+"new-explore-feed-preferences-customize-explore-feed" = "Title of the Settings section that allows users to customize the Community feed";
 "new-explore-feed-preferences-customize-explore-feed-footer-text" = "Text for explaining the effects of hiding feed cards";
-"new-explore-feed-preferences-languages-footer-text" = "Text for explaining the effects of hiding all feed cards";
 "new-password-instructions" = "Instructions for password change interface";
 "new-password-title" = "Title for password change interface";
 "new-tab" = "Title for creating a new tab.";
@@ -1347,6 +1352,7 @@
 "settings-primary-language" = "Label shown next to primary language {{Identical|Primary}}";
 "settings-primary-language-details" = "Explanation of how the first preferred language is used. \"Explore\" is {{msg-wm|Wikipedia-ios-home-title}}.";
 "settings-search-footer-text" = "Footer text for section that allows users to customize certain Search settings";
+"settings-search-footer-text-home" = "Footer text for section that allows users to customize certain Search settings, shown while the Home tab experiment is enabled";
 "settings-search-open-app-on-search" = "Title for setting that allows users to open app on Search tab";
 "settings-storage-and-syncing-enable-sync-footer-text" = "Footer text of the settings option that enables saved articles and reading lists syncing";
 "settings-storage-and-syncing-enable-sync-title" = "Title of the settings option that enables saved articles and reading lists syncing";
