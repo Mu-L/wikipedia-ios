@@ -185,12 +185,16 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
         displayType = preferredLanguages.count == 1 ? .singleLanguage : .multipleLanguages
     }
     
+    /// While the Home tab experiment is running (phase 1), this feed powers the Community segment of
+    /// the Home tab: the screen is titled Community, and the feed cannot be turned off — so the
+    /// Explore tab toggle and the "turn off the feed" footers are hidden. With home phase 2, the
+    /// reworked community feed replaces it and the screen returns to its Explore feed behavior.
+    private var isCommunityMode: Bool {
+        WMFDeveloperSettingsDataController.shared.enableHomeTab && !WMFDeveloperSettingsDataController.shared.enableHomePhase2
+    }
+
     private func configureNavigationBar() {
-        // While the Home tab experiment is running (phase 1), this feed powers the Community segment
-        // of the Home tab, so the screen is titled Community instead of Explore feed. With home
-        // phase 2, the reworked community feed replaces it and the Explore feed title returns.
-        let isCommunity = WMFDeveloperSettingsDataController.shared.enableHomeTab && !WMFDeveloperSettingsDataController.shared.enableHomePhase2
-        let title = isCommunity ? CommonStrings.communityFeedTitle : CommonStrings.exploreFeedTitle
+        let title = isCommunityMode ? CommonStrings.communityFeedTitle : CommonStrings.exploreFeedTitle
         let titleConfig = WMFNavigationBarTitleConfig(title: title, customView: nil, alignment: .centerCompact)
         var closeConfig: WMFLargeCloseButtonConfig? = nil
         
@@ -251,10 +255,12 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
 
     // MARK: Sections
 
-    let togglingFeedCardsFooterText = WMFLocalizedString("explore-feed-preferences-languages-footer-text", value: "Hiding all Explore feed cards in all of your languages will turn off the Explore tab.", comment: "Text for explaining the effects of hiding all feed cards")
+    let togglingFeedCardsFooterText = WMFLocalizedString("new-explore-feed-preferences-languages-footer-text", value: "Hiding all Community feed cards in all of your languages will turn off the Explore tab.", comment: "Text for explaining the effects of hiding all feed cards")
 
     private lazy var customizationSection: ExploreFeedSettingsSection = {
-        return ExploreFeedSettingsSection(headerTitle: WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed", value: "Customize the Community feed", comment: "Title of the Settings section that allows users to customize the Explore feed"), footerTitle: String.localizedStringWithFormat("%@ %@", WMFLocalizedString("explore-feed-preferences-customize-explore-feed-footer-text", value: "Hiding a card type will stop this card type from appearing in the Explore feed.", comment: "Text for explaining the effects of hiding feed cards"), togglingFeedCardsFooterText), items: feedCards)
+        let hidingCardFooterText = WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed-footer-text", value: "Hiding a card type will stop this card type from appearing in the Community feed.", comment: "Text for explaining the effects of hiding feed cards")
+        let footerTitle = isCommunityMode ? hidingCardFooterText : String.localizedStringWithFormat("%@ %@", hidingCardFooterText, togglingFeedCardsFooterText)
+        return ExploreFeedSettingsSection(headerTitle: WMFLocalizedString("new-explore-feed-preferences-customize-explore-feed", value: "Customize the Community feed", comment: "Title of the Settings section that allows users to customize the Explore feed"), footerTitle: footerTitle, items: feedCards)
     }()
 
     private lazy var mainSection: ExploreFeedSettingsSection = {
@@ -267,17 +273,18 @@ class ExploreFeedSettingsViewController: BaseExploreFeedSettingsViewController, 
         }
         var items: [ExploreFeedSettingsItem] = languages
         items.append(globalCards)
-        return ExploreFeedSettingsSection(headerTitle: CommonStrings.languagesTitle, footerTitle: togglingFeedCardsFooterText, items: items)
+        return ExploreFeedSettingsSection(headerTitle: CommonStrings.languagesTitle, footerTitle: isCommunityMode ? "" : togglingFeedCardsFooterText, items: items)
     }()
 
     override var sections: [ExploreFeedSettingsSection] {
-        guard displayType == .multipleLanguages else {
-            return [customizationSection, mainSection]
+        var sections = [customizationSection]
+        if displayType == .multipleLanguages, let languagesSection {
+            sections.append(languagesSection)
         }
-        guard let languagesSection = languagesSection else {
-            return [customizationSection, mainSection]
+        if !isCommunityMode {
+            sections.append(mainSection)
         }
-        return [customizationSection, languagesSection, mainSection]
+        return sections
     }
 
     // MARK: Toggling Explore feed
