@@ -142,7 +142,7 @@ struct RandomWidgetEntryView: View {
             )
         )
         .containerBackground(for: .widget) { Color.clear }
-        .widgetURL(URL(string: "wikipedia://random?source=widget_reading_challenge"))
+        .widgetURL(URL(string: "wikipedia://random?source=widget_random_article"))
     }
 }
 
