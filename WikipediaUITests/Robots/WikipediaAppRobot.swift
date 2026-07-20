@@ -21,6 +21,10 @@ extension WikipediaAppRobot {
     var onboarding: OnboardingRobot {
         OnboardingRobot(base: base, configuration: configuration)
     }
+
+    var newOnboarding: NewOnboardingRobot {
+        NewOnboardingRobot(base: base, configuration: configuration)
+    }
 }
 
 // MARK: - App lifecycle
@@ -41,14 +45,16 @@ extension XCTestCase {
         onboardingState: UITestConfiguration.OnboardingState,
         resetsPreferredLanguages: Bool = true,
         suppressesActivityTabOnboarding: Bool = true,
-        suppressesGamesAnnouncement: Bool = true
+        suppressesGamesAnnouncement: Bool = true,
+        enablesHomeTab: Bool = false
     ) -> WikipediaAppRobot {
         let app = XCUIApplication()
         let configuration = UITestConfiguration(
             onboardingState: onboardingState,
             resetsPreferredLanguages: resetsPreferredLanguages,
             suppressesActivityTabOnboarding: suppressesActivityTabOnboarding,
-            suppressesGamesAnnouncement: suppressesGamesAnnouncement
+            suppressesGamesAnnouncement: suppressesGamesAnnouncement,
+            enablesHomeTab: enablesHomeTab
         )
         app.configureForUITestLaunch(configuration: configuration)
         app.launch()
