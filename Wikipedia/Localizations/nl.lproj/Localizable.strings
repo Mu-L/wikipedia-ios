@@ -710,6 +710,12 @@
 "home-button-saved-accessibility-label" = "Wikipedia, terug naar opgslagen";
 "home-community-tab-title" = "Gemeenschap";
 "home-edit-languages-title" = "Talen toevoegen of bewerken";
+"home-feed-for-you-based-on-interests-subtitle" = "Artikelen die zijn afgestemd op de onderwerpen die u hebt gekozen.";
+"home-feed-for-you-based-on-interests-title" = "Op basis van uw interesses";
+"home-feed-for-you-because-you-read-subtitle" = "Suggesties gebaseerd op een recent artikel uit uw geschiedenis";
+"home-feed-for-you-because-you-read-title" = "Omdat u hebt gelezen";
+"home-feed-for-you-continue-reading-subtitle" = "Verder gaan met artikelen die u niet hebt uitgelezen";
+"home-feed-for-you-continue-reading-title" = "Verder lezen";
 "home-for-you-tab-title" = "Voor u";
 "home-more-like-footer" = "Vergelijkbaar met $1";
 "home-nearby-footer" = "Meer in de buurt van uw huidige locatie";
