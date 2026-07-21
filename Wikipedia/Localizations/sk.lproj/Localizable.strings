@@ -1198,9 +1198,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "Chvíľka pokojného čítania?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "Kým deň celkom nezaspí... stále je čas niečo sa naučiť.";
 "reading-challenge-random-button" = "Náhodný";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1 deň|$1 dni|$1 dní}}";
 "reading-challenge-streak-no-days" = "$1 z 25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1 z 25 dní}}";
 "reading-challenge-subtitle" = "25-dňová čitateľská výzva";
 "reading-challenge-widget-announcement-body2" = "Na sledovanie svojej série s Baby Globe si musíte z domovskej obrazovky pridať widget Čitateľská výzva.";
 "reading-challenge-widget-announcement-secondary-button" = "Ukážte mi ako";
