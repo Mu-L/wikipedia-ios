@@ -30,6 +30,7 @@ class WidgetSampleContentTests: XCTestCase {
         let articles = try XCTUnwrap(content.topRead?.elements)
         XCTAssertEqual(articles.count, 2)
         XCTAssertNotNil(articles[0].viewHistory)
+        XCTAssertNotNil(articles[0].views)
         XCTAssertNil(articles[1].viewHistory, "article without view_history should decode with nil history")
     }
 }
