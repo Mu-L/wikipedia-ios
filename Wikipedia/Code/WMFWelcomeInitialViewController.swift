@@ -1,3 +1,6 @@
+import WMFData
+import WMFTestKitchen
+
 // A lightweight way to provide iPhone X friendly constraints when using a UIPageViewController
 // is to simply embed it in a container view which uses such constraints. No need to modify the
 // UIPageViewController subclass at all. WMFWelcomeInitialViewController embeds a UIPageViewController
@@ -41,5 +44,24 @@ class WMFWelcomeInitialViewController: ThemeableViewController {
     
     override var shouldAutorotate : Bool {
         return false
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        sendNewInstallOnboardingStartEventIfNeeded()
+    }
+
+    // MARK: - App install instrumentation helper function
+    private func sendNewInstallOnboardingStartEventIfNeeded() {
+        let store = WMFDataEnvironment.current.userDefaultsStore
+        let key = WMFUserDefaultsKey.didSendNewInstallOnboardingStartEvent.rawValue
+
+        let didSend: Bool? = try? store?.load(key: key)
+        guard didSend != true else { return }
+        try? store?.save(key: key, value: true)
+
+        TestKitchenAdapter.shared.client.getInstrument(name: "apps-authentication")
+            .submitInteraction(action: "app_open", actionSource: "new_install_onboarding_start")
     }
 }
