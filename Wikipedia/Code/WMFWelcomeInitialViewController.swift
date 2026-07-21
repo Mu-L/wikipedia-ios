@@ -54,14 +54,16 @@ class WMFWelcomeInitialViewController: ThemeableViewController {
 
     // MARK: - App install instrumentation helper function
     private func sendNewInstallOnboardingStartEventIfNeeded() {
-        let store = WMFDataEnvironment.current.userDefaultsStore
+        guard let store = WMFDataEnvironment.current.userDefaultsStore else { return }
+
         let key = WMFUserDefaultsKey.didSendNewInstallOnboardingStartEvent.rawValue
 
-        let didSend: Bool? = try? store?.load(key: key)
-        guard didSend != true else { return }
-        try? store?.save(key: key, value: true)
+        let didSend: Bool = (try? store.load(key: key)) ?? false
+        guard !didSend else { return }
 
         TestKitchenAdapter.shared.client.getInstrument(name: "apps-authentication")
             .submitInteraction(action: "app_open", actionSource: "new_install_onboarding_start")
+
+        try? store.save(key: key, value: true)
     }
 }
