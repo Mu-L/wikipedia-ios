@@ -727,6 +727,7 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
             self.shareIfNecessary()
             self.restoreScrollStateIfNecessary()
             self.logPageViewAfterArticleLoad()
+            self.toolbarController?.setToolbarButtons(enabled: true)
             self.articleLoadWaitGroup = nil
         }
     }
@@ -1420,7 +1421,7 @@ private extension ArticleViewController {
     // MARK: Notifications
 
     func addNotificationHandlers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveArticleUpdatedNotification), name: NSNotification.Name.WMFArticleUpdated, object: article)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveArticleUpdatedNotification), name: NSNotification.Name.WMFArticleUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textSizeChanged(notification:)), name: NSNotification.Name(rawValue: FontSizeSliderViewController.WMFArticleFontSizeUpdatedNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -1581,6 +1582,7 @@ private extension ArticleViewController {
     func setupToolbar() {
         toolbarController = ArticleToolbarController(delegate: self)
         toolbarController?.apply(theme: theme)
+        toolbarController?.setToolbarButtons(enabled: false)
         navigationController?.setToolbarHidden(false, animated: false)
     }
 
