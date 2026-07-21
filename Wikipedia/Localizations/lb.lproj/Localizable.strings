@@ -912,9 +912,7 @@
 "reading-challenge-not-live-yet-title" = "Maacht Iech prett fir ze liesen";
 "reading-challenge-not-yet-read-subtitle-article" = "Är Serie ass just een Artikel ewech.";
 "reading-challenge-random-button" = "Zoufälleg";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1 Dag|$1 Deeg}}";
 "reading-challenge-streak-no-days" = "$1 vu 25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1 vu 25 Deeg}}";
 "reading-challenge-subtitle" = "25-Deeg-Lies-Challenge";
 "reading-challenge-widget-announcement-secondary-button" = "Weist mir wéi";
 "reading-challenge-widget-display-name" = "Lies-Challenge";

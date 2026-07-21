@@ -1193,9 +1193,7 @@
 "reading-challenge-not-yet-read-subtitle-drift" = "別讓今日白白流逝，您的連續閱讀紀錄在等著您。";
 "reading-challenge-not-yet-read-subtitle-quiet" = "寧靜的閱讀時刻？";
 "reading-challenge-random-button" = "隨機";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1}} 天";
 "reading-challenge-streak-no-days" = "$1/25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1/25 天}}";
 "reading-challenge-subtitle" = "25 天閱讀挑戰";
 "reading-challenge-widget-announcement-secondary-button" = "告訴我怎麼做";
 "reading-challenge-widget-display-name" = "閱讀挑戰";

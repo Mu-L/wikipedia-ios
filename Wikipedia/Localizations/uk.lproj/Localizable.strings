@@ -1205,9 +1205,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "Тиха хвилинка читання?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "Перш ніж день задрімає… ще є час чогось навчитися.";
 "reading-challenge-random-button" = "Випадково";
-"reading-challenge-streak-days" = "{{PLURAL:$1|$1 день|$1 дні|$1 днів}}";
 "reading-challenge-streak-no-days" = "$1 з 25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1 з 25 днів}}";
 "reading-challenge-subtitle" = "25-денний читацький виклик";
 "reading-challenge-widget-announcement-body2" = "Щоб відстежувати свою серію разом з Малюком Глобусом, вам потрібно додати віджет «Читацький виклик» на головний екран.";
 "reading-challenge-widget-announcement-secondary-button" = "Показати мені, як";

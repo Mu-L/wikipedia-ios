@@ -1190,9 +1190,7 @@
 "reading-challenge-not-yet-read-subtitle-quiet" = "Миг за спокојно читање?";
 "reading-challenge-not-yet-read-subtitle-snooze" = "Пред да ви измине денот...сè уште имате време да научите нешто.";
 "reading-challenge-random-button" = "Случајна";
-"reading-challenge-streak-days" = "{{PLURAL:$1|еден ден|$1 дена}}";
 "reading-challenge-streak-no-days" = "$1 од 25";
-"reading-challenge-streak-of-days" = "{{PLURAL:$1|$1 од 25 ден|$1 од 25 дена}}";
 "reading-challenge-subtitle" = "25-дневен читателски предизвик";
 "reading-challenge-widget-announcement-body2" = "За да го следите напредокот со Глобусчето, ќе треба да го додадете елементот Читателски предизвик од вашиот почетен екран.";
 "reading-challenge-widget-announcement-secondary-button" = "Покажи ми како";
