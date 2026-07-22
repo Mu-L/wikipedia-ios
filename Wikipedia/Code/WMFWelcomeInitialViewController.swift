@@ -61,7 +61,7 @@ class WMFWelcomeInitialViewController: ThemeableViewController {
         let didSend: Bool = (try? store.load(key: key)) ?? false
         guard !didSend else { return }
 
-        TestKitchenAdapter.shared.client.getInstrument(name: "apps-authentication")
+        TestKitchenAdapter.shared.client.getInstrument(name: "apps-open")
             .submitInteraction(action: "app_open", actionSource: "new_install_onboarding_start")
 
         try? store.save(key: key, value: true)
