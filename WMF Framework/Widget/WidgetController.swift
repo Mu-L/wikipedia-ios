@@ -178,7 +178,11 @@ public final class WidgetController: NSObject {
 
             // Only Core Data stores in the shared app container matter here.
             let containerPath = FileManager.default.wmf_containerURL().resolvingSymlinksInPath().path
-            let openSqliteFile = openFiles.first(where: { $0.hasPrefix(containerPath) && $0.hasSuffix(".sqlite") })
+            let containerPathPrefix = containerPath.hasSuffix("/") ? containerPath : (containerPath + "/")
+            let openSqliteFile = openFiles.first(where: {
+                let resolvedPath = URL(fileURLWithPath: $0).resolvingSymlinksInPath().path
+                return resolvedPath.hasPrefix(containerPathPrefix) && resolvedPath.hasSuffix(".sqlite")
+            })
             assert(openSqliteFile == nil, "There should be no open sqlite files (which in our case are Core Data persistent stores) in the shared app container after the data store is released. The widget still has a lock on these files: \(openFiles)")
             #endif
         }
