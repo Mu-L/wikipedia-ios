@@ -57,7 +57,6 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
     internal let dataStore: MWKDataStore
 
     private let cacheController: ArticleCacheController
-    public var readingChallengeCoordinator: ReadingChallengeAnnouncementCoordinator?
     private var whichCameFirstCoordinator: WhichCameFirstCoordinator?
 
     internal var willDisplayCampaignModal: Bool? {
@@ -518,7 +517,6 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
     }
 
     /// Modal presentation priority chain for the Article view:
-    ///   1. Reading challenge  →  if shown, stop.
     ///   2. Year in Review     →  if shown, stop.
     ///   3. Fundraising        →  if shown, stop.
     ///   4. Games announcement →  shown only when all of the above decline.
@@ -526,34 +524,13 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
     /// If any higher-priority modal is shown, the games announcement is deferred to the next launch.
     /// Only one modal is ever presented per appearance.
     private func presentModalsIfNeeded() {
-        // Do not replace an in-flight reading challenge coordinator.
-        guard readingChallengeCoordinator == nil else {
-            return
-        }
-        
-        // Prioritize reading challenge, then fall back to year in review or fundraising
+
+        // fall back to year in review or fundraising
         guard let navigationController else {
             presentYearInReviewAnnouncementOrFundraisingOrGamesIfNeeded()
             return
         }
-        
-        let readingChallengeCoordinator = ReadingChallengeAnnouncementCoordinator(navigationController: navigationController, dataStore: dataStore, theme: theme, fromWidgetJoinChallengeButton: false, fromAppStoreEvent: false, isLoggedIn: dataStore.authenticationManager.authStateIsPermanent, instrument: widgetInstrument)
 
-        readingChallengeCoordinator.onComplete = { [weak self] didPresentSomething in
-            
-            self?.readingChallengeCoordinator = nil
-            
-            // Do not present followup modals if they just saw a reading challenge announcement.
-            guard !didPresentSomething else {
-                return
-            }
-            
-            self?.presentYearInReviewAnnouncementOrFundraisingOrGamesIfNeeded()
-        }
-        
-        self.readingChallengeCoordinator = readingChallengeCoordinator
-        
-        readingChallengeCoordinator.start()
     }
 
     /// Called at the tail of the modal chain (after RC, YIR, and fundraising have all declined).
@@ -730,6 +707,7 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
             self.shareIfNecessary()
             self.restoreScrollStateIfNecessary()
             self.logPageViewAfterArticleLoad()
+            self.toolbarController?.setToolbarButtons(enabled: true)
             self.articleLoadWaitGroup = nil
         }
     }
@@ -1137,6 +1115,7 @@ class ArticleViewController: ThemeableViewController, UIScrollViewDelegate, WMFN
 
         view.backgroundColor = theme.colors.paperBackground
         webView.scrollView.indicatorStyle = theme.scrollIndicatorStyle
+        leadImageView.alpha = theme.imageOpacity
         toolbarController?.apply(theme: theme)
         tableOfContentsController.apply(theme: theme)
         findInPage.view?.apply(theme: theme)
@@ -1423,7 +1402,7 @@ private extension ArticleViewController {
     // MARK: Notifications
 
     func addNotificationHandlers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveArticleUpdatedNotification), name: NSNotification.Name.WMFArticleUpdated, object: article)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveArticleUpdatedNotification), name: NSNotification.Name.WMFArticleUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.textSizeChanged(notification:)), name: NSNotification.Name(rawValue: FontSizeSliderViewController.WMFArticleFontSizeUpdatedNotification), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
@@ -1584,6 +1563,7 @@ private extension ArticleViewController {
     func setupToolbar() {
         toolbarController = ArticleToolbarController(delegate: self)
         toolbarController?.apply(theme: theme)
+        toolbarController?.setToolbarButtons(enabled: false)
         navigationController?.setToolbarHidden(false, animated: false)
     }
 
