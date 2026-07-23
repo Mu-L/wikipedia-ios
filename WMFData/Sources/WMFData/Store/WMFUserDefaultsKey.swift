@@ -53,7 +53,7 @@ public enum WMFUserDefaultsKey: String {
 
     // Games dev settings
     case developerSettingsShowGamesV2 = "dev-settings-show-games-v2"
-    
+
     // Logging
     case appInstallID = "wmf-app-install-id"
     case sessionID = "wmf-session-id"
@@ -84,4 +84,7 @@ public enum WMFUserDefaultsKey: String {
     
     case randomWidgetDailyIndex = "random-widget-daily-index"
     case randomWidgetDailyDate = "random-widget-daily-date"
+
+    // Onboarding: New app install event
+    case didSendNewInstallOnboardingStartEvent = "did-send-new-install-onboarding-start-event"
 }
